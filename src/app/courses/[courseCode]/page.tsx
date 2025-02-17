@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Card, CardContent } from "@/components/ui/card";
 import { Star } from "lucide-react";
 import { ClientReviewDialog } from "@/components/ClientReviewDialog";

@@ -20,13 +20,12 @@ function getRating(doc: DocumentData): number {
 
 export default async function CoursePage({
   params,
-  searchParams,
 }: {
-  params: { courseCode: string };
-  searchParams: { [key: string]: string | string[] | undefined };
+  params: { courseCode: string } | Promise<{ courseCode: string }>;
 }) {
-  const { courseCode } = params;
-  const courseDocRef = doc(db, "courses", params.courseCode);
+  // Await params in case it's a promise
+  const { courseCode } = await params;
+  const courseDocRef = doc(db, "courses", courseCode);
   const courseDocSnap = await getDoc(courseDocRef);
   const course = courseDocSnap.data();
 
@@ -52,7 +51,7 @@ export default async function CoursePage({
         <div className="mb-8">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-2xl font-bold">Reviews</h3>
-            <ClientReviewDialog courseCode={params.courseCode} />
+            <ClientReviewDialog courseCode={courseCode} />
           </div>
 
           <div className="space-y-4">

@@ -6,10 +6,13 @@ import { ClientReviewDialog } from "@/components/ClientReviewDialog";
 import { DocumentData } from "firebase/firestore";
 import { db } from "@/firebase/clientApp"
 import { doc, getDoc } from "firebase/firestore";
+import { toZonedTime, format } from 'date-fns-tz';
 
 function getRating(doc: DocumentData): number {
   let count = 0;
   let total = 0;
+
+  if (doc.reviews == null) return 0;
   
   Object.values(doc.reviews).forEach((review: any) => {
     total += review.overallRating;
@@ -17,6 +20,16 @@ function getRating(doc: DocumentData): number {
   });
 
   return Math.round((total / count) * 100) / 100;
+}
+
+function getDate(doc: DocumentData): string {
+  const timestamp = doc.date;
+  const date = timestamp.toDate();
+
+  const timeZone = 'America/Vancouver';
+  const zonedDate = toZonedTime(date, timeZone);
+  
+  return format(zonedDate, 'yyyy-MM-dd', { timeZone });
 }
 
 export default async function CoursePage({ params }: { params: any }) {
@@ -51,45 +64,43 @@ export default async function CoursePage({ params }: { params: any }) {
           </div>
 
           <div className="space-y-4">
-            {Object.values(reviews).map((review) => (
-              <Card key={review.id}>
-                <CardContent className="pt-6">
-                  <div className="flex items-center gap-2 mb-4">
-                    <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                    <span className="font-medium">
-                      {review.overallRating}
-                    </span>
-                    <span className="text-sm italic text-muted-foreground">
-                      {review.name}
-                    </span>
-                    <span className="text-sm italic text-muted-foreground">
-                      {review.date}
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-3 gap-4 mb-4">
-                    <div className="text-sm">
-                      <span className="text-muted-foreground">Usefulness:</span>
-                      <div className="font-medium">
-                        {review.usefulness}/5
+            {reviews && Object.values(reviews).length > 0 ? (
+              Object.values(reviews).
+              sort((a, b) => b.date.toMillis() - a.date.toMillis()).
+              map((review) => (
+                <Card key={review.id}>
+                  <CardContent className="pt-6">
+                    <div className="flex items-center gap-2 mb-4">
+                      <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                      <span className="font-medium">{review.overallRating}</span>
+                      <span className="text-sm italic text-muted-foreground">
+                        {review.name}
+                      </span>
+                      <span className="text-sm italic text-muted-foreground">
+                        {getDate(review)}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-4 mb-4">
+                      <div className="text-sm">
+                        <span className="text-muted-foreground">Usefulness:</span>
+                        <div className="font-medium">{review.usefulness}/5</div>
+                      </div>
+                      <div className="text-sm">
+                        <span className="text-muted-foreground">Easiness:</span>
+                        <div className="font-medium">{review.easiness}/5</div>
+                      </div>
+                      <div className="text-sm">
+                        <span className="text-muted-foreground">Enjoyment:</span>
+                        <div className="font-medium">{review.enjoyment}/5</div>
                       </div>
                     </div>
-                    <div className="text-sm">
-                      <span className="text-muted-foreground">Easiness:</span>
-                      <div className="font-medium">
-                        {review.easiness}/5
-                      </div>
-                    </div>
-                    <div className="text-sm">
-                      <span className="text-muted-foreground">Enjoyment:</span>
-                      <div className="font-medium">
-                        {review.enjoyment}/5
-                      </div>
-                    </div>
-                  </div>
-                  <p className="mb-4">{review.comments}</p>
-                </CardContent>
-              </Card>
-            ))}
+                    <p className="mb-4">{review.comments}</p>
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              <p>Leave the first review!</p>
+            )}
           </div>
         </div>
       </div>

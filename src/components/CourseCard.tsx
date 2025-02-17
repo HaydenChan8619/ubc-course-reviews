@@ -13,6 +13,8 @@ function getRating(doc: DocumentData): number {
   let count = 0;
   let total = 0;
   
+  if (doc.reviews == null) return 0;
+
   Object.values(doc.reviews).forEach((review: any) => {
     total += review.overallRating;
     count++;

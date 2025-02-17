@@ -12,6 +12,7 @@ import StarRating from "./StarRating";
 import { db } from "@/firebase/clientApp";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
+import { toZonedTime, format } from 'date-fns-tz';
 
 const reviewSchema = z.object({
   usefulness: z.number().min(1, { message: "Rating must be between 1 and 5" }).max(5, { message: "Rating must be between 1 and 5" }),
@@ -45,14 +46,14 @@ async function updateDatabase (courseCode, data) {
 
     // Build the review object with the required fields.
     const review = {
-      overallRating,            // number
-      usefulness: Number(data.usefulness),  // number
-      easiness: Number(data.easiness),      // number
-      enjoyment: Number(data.enjoyment),      // number
-      comments: data.comments,    // string
-      name: data.name,            // string
-      date: new Date().toISOString().split('T')[0], // string
-      votes: 1,                   // number
+      overallRating,
+      usefulness: Number(data.usefulness),
+      easiness: Number(data.easiness),
+      enjoyment: Number(data.enjoyment),
+      comments: data.comments,
+      name: data.name,
+      date: toZonedTime(new Date(),'America/Vancouver'),
+      votes: 1,
     };
 
     // Update the course document: 

@@ -2,7 +2,6 @@
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Star } from "lucide-react";
-import { Course } from "@/types/course";
 import Link from "next/link";
 import { DocumentData } from "firebase/firestore";
 
@@ -11,21 +10,15 @@ interface CourseCardProps {
 }
 
 export function getRating(doc: DocumentData): number {
-  const reviews = doc.reviews;
+  let count = 0;
+  let total = 0;
+  
+  Object.values(doc.reviews).forEach((review: any) => {
+    total += review.overallRating;
+    count++;
+  });
 
-  if (!reviews || typeof reviews !== 'object') return 0;
-
-  const reviewValues = Object.values(reviews);
-
-  const ratings = reviewValues
-    .map((review: any) => review.overallRating)
-    .filter((rating: number) => typeof rating === 'number');
-
-  if (ratings.length === 0) return 0;
-
-  const total = ratings.reduce((acc, rating) => acc + rating, 0);
-
-  return total / ratings.length;
+  return Math.round((total / count) * 100) / 100;
 }
 
 export function CourseCard({ course }: CourseCardProps) {

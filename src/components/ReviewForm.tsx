@@ -7,22 +7,17 @@ import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import StarRating from "./StarRating";
+import { db } from "@/firebase/clientApp";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { useRouter } from "next/navigation";
 
 const reviewSchema = z.object({
-  usefulness: z.string().transform((val) => parseInt(val, 10))
-    .refine((val) => val >= 1 && val <= 5, {
-      message: "Rating must be between 1 and 5",
-    }),
-  easiness: z.string().transform((val) => parseInt(val, 10))
-    .refine((val) => val >= 1 && val <= 5, {
-      message: "Rating must be between 1 and 5",
-    }),
-  enjoyment: z.string().transform((val) => parseInt(val, 10))
-    .refine((val) => val >= 1 && val <= 5, {
-      message: "Rating must be between 1 and 5",
-    }),
-  comment: z.string().min(10, "Comment must be at least 10 characters long"),
-  authorName: z.string().min(2, "Name must be at least 2 characters long"),
+  usefulness: z.number().min(1, { message: "Rating must be between 1 and 5" }).max(5, { message: "Rating must be between 1 and 5" }),
+  easiness: z.number().min(1, { message: "Rating must be between 1 and 5" }).max(5, { message: "Rating must be between 1 and 5" }),
+  enjoyment: z.number().min(1, { message: "Rating must be between 1 and 5" }).max(5, { message: "Rating must be between 1 and 5" }),
+  comments: z.string().min(0, "Comment must be at least 0 characters long"),
+  name: z.string().min(0, "Name must be at least 0 characters long"),
 });
 
 interface ReviewFormProps {
@@ -30,21 +25,63 @@ interface ReviewFormProps {
   onSubmit: () => void;
 }
 
+async function updateDatabase (courseCode, data) {  
+  const courseRef = doc(db, "courses", courseCode);
+  const courseSnap = await getDoc(courseRef);
+
+  // Get the current course data and review count (defaulting to 0 if not set)
+  const courseData = courseSnap.data();
+
+  const currentReviewCount = courseData.reviewCount || 0;
+
+    // Create the new review ID based on reviewCount
+    const newReviewId = `review-${currentReviewCount + 1}`;
+
+    // Compute the overall rating as the average (rounded) of the three ratings
+    const overallRating = Math.round(
+      (Number(data.usefulness) + Number(data.easiness) + Number(data.enjoyment)) / 3
+    );
+
+    // Build the review object with the required fields.
+    const review = {
+      overallRating,            // number
+      usefulness: Number(data.usefulness),  // number
+      easiness: Number(data.easiness),      // number
+      enjoyment: Number(data.enjoyment),      // number
+      comments: data.comments,    // string
+      name: data.name,            // string
+      date: new Date().toISOString().split('T')[0], // string
+      votes: 1,                   // number
+    };
+
+    // Update the course document: 
+    // - Add the new review in the 'reviews' map (using dot notation).
+    // - Update the reviewCount field.
+    await updateDoc(courseRef, {
+      [`reviews.${newReviewId}`]: review,
+      reviewCount: currentReviewCount + 1,
+    });
+
+    console.log("Review submitted successfully.");
+};
+
 export function ReviewForm({ courseCode, onSubmit }: ReviewFormProps) {
   const form = useForm<z.infer<typeof reviewSchema>>({
     resolver: zodResolver(reviewSchema),
     defaultValues: {
-      usefulness: "",
-      easiness: "",
-      enjoyment: "",
-      comment: "",
-      authorName: "",
+      usefulness: 0,
+      easiness: 0,
+      enjoyment: 0,
+      comments: "",
+      name: "",
     },
   });
 
+  const router = useRouter();
+
   const handleSubmit = (values: z.infer<typeof reviewSchema>) => {
     const { usefulness, easiness, enjoyment } = values;
-    const overallRating = Math.round((usefulness + easiness + enjoyment) / 3 * 2) / 2;
+    const overallRating = (usefulness + easiness + enjoyment) / 3 ;
     
     // Here you would typically send the data to your backend
     console.log({ 
@@ -57,6 +94,10 @@ export function ReviewForm({ courseCode, onSubmit }: ReviewFormProps) {
       },
       overallRating
     });
+    updateDatabase(courseCode, values).finally(() => {
+      router.refresh();
+    });
+    
     onSubmit();
   };
 
@@ -68,9 +109,9 @@ export function ReviewForm({ courseCode, onSubmit }: ReviewFormProps) {
           name="usefulness"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Usefulness (1-5)</FormLabel>
+              <FormLabel>Usefulness</FormLabel>
               <FormControl>
-                <Input type="number" min="1" max="5" {...field} />
+                <StarRating rating={field.value || 0} onChange={field.onChange} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -82,9 +123,9 @@ export function ReviewForm({ courseCode, onSubmit }: ReviewFormProps) {
           name="easiness"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Easiness (1-5)</FormLabel>
+              <FormLabel>Easiness</FormLabel>
               <FormControl>
-                <Input type="number" min="1" max="5" {...field} />
+                <StarRating rating={field.value || 0} onChange={field.onChange} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -96,9 +137,9 @@ export function ReviewForm({ courseCode, onSubmit }: ReviewFormProps) {
           name="enjoyment"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Enjoyment (1-5)</FormLabel>
+              <FormLabel>Enjoyment</FormLabel>
               <FormControl>
-                <Input type="number" min="1" max="5" {...field} />
+                <StarRating rating={field.value || 0} onChange={field.onChange} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -107,10 +148,10 @@ export function ReviewForm({ courseCode, onSubmit }: ReviewFormProps) {
 
         <FormField
           control={form.control}
-          name="comment"
+          name="comments"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Comment</FormLabel>
+              <FormLabel>Comment <i className="text-muted-foreground">(Optional)</i></FormLabel>
               <FormControl>
                 <Textarea {...field} />
               </FormControl>
@@ -121,10 +162,10 @@ export function ReviewForm({ courseCode, onSubmit }: ReviewFormProps) {
 
         <FormField
           control={form.control}
-          name="authorName"
+          name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Your Name</FormLabel>
+              <FormLabel>Your Name <i className="text-muted-foreground">(Optional)</i></FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>

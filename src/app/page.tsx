@@ -3,10 +3,10 @@
 import { CourseCard } from "@/components/CourseCard";
 import { db } from "@/firebase/clientApp"
 import { useCollection } from "react-firebase-hooks/firestore"
-import { collection, Firestore } from "firebase/firestore"; 
+import { collection} from "firebase/firestore"; 
 
 export default function Home() {
-  const [courses,loading,error] = useCollection(
+  const [courses] = useCollection(
     collection(db, "courses"),
     {}
   ); 

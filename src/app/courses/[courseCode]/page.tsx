@@ -1,33 +1,21 @@
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Star } from "lucide-react";
-import { ReviewForm } from "@/components/ReviewForm";
 import { ClientReviewDialog } from "@/components/ClientReviewDialog";
-import { Review } from "@/types/course";
 
-import { getFirestore } from "firebase-admin/firestore";
-import { initializeApp, getApps, cert } from "firebase-admin/app";
 import { DocumentData } from "firebase/firestore";
 import { db } from "@/firebase/clientApp"
 import { doc, getDoc } from "firebase/firestore";
 
 export function getRating(doc: DocumentData): number {
-  const reviews = doc.reviews;
+  let count = 0;
+  let total = 0;
+  
+  Object.values(doc.reviews).forEach((review: any) => {
+    total += review.overallRating;
+    count++;
+  });
 
-  if (!reviews || typeof reviews !== 'object') return 0;
-
-  const reviewValues = Object.values(reviews);
-
-  const ratings = reviewValues
-    .map((review: any) => review.overallRating)
-    .filter((rating: number) => typeof rating === 'number');
-
-  if (ratings.length === 0) return 0;
-
-  const total = ratings.reduce((acc, rating) => acc + rating, 0);
-
-  return total / ratings.length;
+  return Math.round((total / count) * 100) / 100;
 }
 
 export default async function CoursePage({

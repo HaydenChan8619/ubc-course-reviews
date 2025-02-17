@@ -11,7 +11,7 @@ export default function Footer() {
           <p className="mb-4 text-center max-w-xl mx-auto">
             Thank you for supporting this student-lead project!
             <br />
-            You're awesome! Have a great day :)
+            You&apos;re awesome! Have a great day :)
           </p>
 
           {/* Social links */}

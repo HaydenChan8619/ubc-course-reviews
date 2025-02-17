@@ -9,7 +9,7 @@ interface CourseCardProps {
   course: DocumentData;
 }
 
-export function getRating(doc: DocumentData): number {
+function getRating(doc: DocumentData): number {
   let count = 0;
   let total = 0;
   

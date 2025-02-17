@@ -6,7 +6,7 @@ import { DocumentData } from "firebase/firestore";
 import { db } from "@/firebase/clientApp"
 import { doc, getDoc } from "firebase/firestore";
 
-export function getRating(doc: DocumentData): number {
+function getRating(doc: DocumentData): number {
   let count = 0;
   let total = 0;
   

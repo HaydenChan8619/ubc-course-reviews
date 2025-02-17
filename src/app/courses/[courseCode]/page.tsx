@@ -18,13 +18,8 @@ function getRating(doc: DocumentData): number {
   return Math.round((total / count) * 100) / 100;
 }
 
-export default async function CoursePage({
-  params,
-}: {
-  params: { courseCode: string } | Promise<{ courseCode: string }>;
-}) {
-  // Await params in case it's a promise
-  const { courseCode } = await params;
+export default async function CoursePage({ params }: { params: any }) {
+  const { courseCode } = params as { courseCode: string };
   const courseDocRef = doc(db, "courses", courseCode);
   const courseDocSnap = await getDoc(courseDocRef);
   const course = courseDocSnap.data();

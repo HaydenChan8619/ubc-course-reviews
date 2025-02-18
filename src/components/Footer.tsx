@@ -9,7 +9,7 @@ export default function Footer() {
         <div className="flex flex-col items-center justify-center">
           {/* Thank you message - centered */}
           <p className="mb-4 text-center max-w-xl mx-auto">
-            Thank you for supporting this student-lead project!
+            Thank you for supporting this student-led project!
             <br />
             You&apos;re awesome! Have a great day :)
           </p>

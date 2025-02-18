@@ -50,7 +50,8 @@ export default function Home() {
       </div>
 
       <main className="container mx-auto px-4 pt-32 pb-8">
-        <div className="pt-8"></div>
+        <div className="pt-8 max-md:pt-16"></div>
+        <div className="max-md:pt-8"></div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredCourses?.map((doc) => {
             const courseData = doc.data();

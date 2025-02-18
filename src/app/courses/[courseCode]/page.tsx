@@ -9,6 +9,8 @@ import { doc, getDoc } from "firebase/firestore";
 import { toZonedTime, format } from 'date-fns-tz';
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger} from "@/components/ui/accordion";
+import { AccordionHeader } from "@radix-ui/react-accordion";
 
 function getRating(doc: DocumentData): number {
   let count = 0;
@@ -56,7 +58,7 @@ export default async function CoursePage({ params }: { params: any }) {
           </div>
         </header>
       </div>
-      <div className="pt-8"></div>
+      <div className="pt-8 max-md:pt-16"></div>
       <main className="container mx-auto px-4 py-8 pt-32">
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
@@ -68,7 +70,14 @@ export default async function CoursePage({ params }: { params: any }) {
                 {getRating(course)}
               </span>
             </div>
-            <p className="text-lg">{course.description}</p>
+            <Accordion type="single" collapsible className="w-full border border-gray-300 rounded-lg">
+              <AccordionItem value="item-1">
+                <AccordionTrigger className="text-lg font-bold pl-4">Course Description</AccordionTrigger>
+                <AccordionContent className="pl-4 pr-4">
+                {course.description}
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </div>
 
           <div className="mb-8">

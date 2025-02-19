@@ -13,6 +13,7 @@ import { db } from "@/firebase/clientApp";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { toZonedTime, format } from 'date-fns-tz';
+import { names } from "@/lib/names";
 
 const reviewSchema = z.object({
   usefulness: z.number().min(1, { message: "Rating must be between 1 and 5" }).max(5, { message: "Rating must be between 1 and 5" }),
@@ -27,44 +28,37 @@ interface ReviewFormProps {
   onSubmit: () => void;
 }
 
+function generateName() {
+  const randomIndex = Math.floor(Math.random() * names.length);
+  return names[randomIndex];
+}
+
 async function updateDatabase (courseCode, data) {  
   const courseRef = doc(db, "courses", courseCode);
   const courseSnap = await getDoc(courseRef);
-
-  // Get the current course data and review count (defaulting to 0 if not set)
   const courseData = courseSnap.data();
-
+  
   const currentReviewCount = courseData.reviewCount || 0;
+  const newReviewId = `review-${currentReviewCount + 1}`;
 
-    // Create the new review ID based on reviewCount
-    const newReviewId = `review-${currentReviewCount + 1}`;
+  const overallRating = Math.round((Number(data.usefulness) + Number(data.easiness) + Number(data.enjoyment)) / 3);
+  const authorName = data.name == "" ? generateName() : data.name;
 
-    // Compute the overall rating as the average (rounded) of the three ratings
-    const overallRating = Math.round(
-      (Number(data.usefulness) + Number(data.easiness) + Number(data.enjoyment)) / 3
-    );
+  const review = {
+    overallRating,
+    usefulness: Number(data.usefulness),
+    easiness: Number(data.easiness),
+    enjoyment: Number(data.enjoyment),
+    comments: data.comments,
+    name: authorName,
+    date: toZonedTime(new Date(),'America/Vancouver'),
+    votes: 1,
+  };
 
-    // Build the review object with the required fields.
-    const review = {
-      overallRating,
-      usefulness: Number(data.usefulness),
-      easiness: Number(data.easiness),
-      enjoyment: Number(data.enjoyment),
-      comments: data.comments,
-      name: data.name,
-      date: toZonedTime(new Date(),'America/Vancouver'),
-      votes: 1,
-    };
-
-    // Update the course document: 
-    // - Add the new review in the 'reviews' map (using dot notation).
-    // - Update the reviewCount field.
-    await updateDoc(courseRef, {
+  await updateDoc(courseRef, {
       [`reviews.${newReviewId}`]: review,
       reviewCount: currentReviewCount + 1,
-    });
-
-    console.log("Review submitted successfully.");
+  });
 };
 
 export function ReviewForm({ courseCode, onSubmit }: ReviewFormProps) {
@@ -82,20 +76,6 @@ export function ReviewForm({ courseCode, onSubmit }: ReviewFormProps) {
   const router = useRouter();
 
   const handleSubmit = (values: z.infer<typeof reviewSchema>) => {
-    const { usefulness, easiness, enjoyment } = values;
-    const overallRating = (usefulness + easiness + enjoyment) / 3 ;
-    
-    // Here you would typically send the data to your backend
-    console.log({ 
-      ...values, 
-      courseCode,
-      ratings: {
-        usefulness,
-        easiness,
-        enjoyment
-      },
-      overallRating
-    });
     updateDatabase(courseCode, values).finally(() => {
       router.refresh();
     });

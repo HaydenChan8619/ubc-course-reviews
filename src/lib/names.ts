@@ -1,0 +1,26 @@
+export const names = [
+    "Anonymous Academic Weapon",
+    "Anonymous BeRealer",
+    "Anonymous Chiikawa",
+    "Anonymous Dinosaur",
+    "Anonymous Elephant",
+    "Anonymous Flamingo",
+    "Anonymous Giraffe",
+    "Anonymous Hippo",
+    "Anonymous Lecture Hiberator",
+    "Anonymous Kangaroo",
+    "Anonymous Lemur",
+    "Anonymous Monkey",
+    "Anonymous Narwhal",
+    "Anonymous Oshawott",
+    "Anonymous Piplup",
+    "Anonymous Nyan Cat",
+    "Anonymous Rhino",
+    "Anonymous Snorlax",
+    "Anonymous Tiger",
+    "Anonymous Unicorn",
+    "Anonymous Influencer",
+    "Anonymous Wolf",
+    "Anonymous Zebra"
+  ];
+  

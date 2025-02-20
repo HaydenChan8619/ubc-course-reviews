@@ -9,7 +9,9 @@ import { toZonedTime, format } from "date-fns-tz";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import VoteButtons from "@/components/VoteButtons"; // Import our new VoteButtons component
+import VoteButtons from "@/components/VoteButtons";
+import UIDInitializer from "@/components/UIDInitializer";
+import { getOrSetUID } from "@/lib/uid";
 
 function getRating(doc: DocumentData): number {
   let count = 0;
@@ -36,6 +38,8 @@ function getDate(doc: DocumentData): string {
 }
 
 export default async function CoursePage({ params }: { params: any }) {
+  const userUID = getOrSetUID();
+
   const { courseCode } = params as { courseCode: string };
   const courseDocRef = doc(db, "courses", courseCode);
   const courseDocSnap = await getDoc(courseDocRef);
@@ -47,6 +51,7 @@ export default async function CoursePage({ params }: { params: any }) {
 
   return (
     <div className="relative">
+      <UIDInitializer />
       <div className="fixed top-0 left-0 right-0 bg-white z-50 shadow-md sauder-blue-bk">
         <header className="container mx-auto px-4 py-4">
           <h1 className="text-4xl font-bold text-white mb-4">Sauder Course Reviews</h1>
@@ -128,7 +133,7 @@ export default async function CoursePage({ params }: { params: any }) {
                           courseCode={courseCode}
                           reviewId={reviewId}
                           initialVotes={review.votes}
-                          initialUserVote={review.voters ? review.voters["temp-uid"] || 0 : 0 }
+                          initialUserVote={review.voters?.[userUID] || 0}
                         />
                       </CardContent>
                     </Card>

@@ -5,7 +5,7 @@ import { db } from "@/firebase/clientApp"
 import { useCollection } from "react-firebase-hooks/firestore"
 import { collection} from "firebase/firestore"; 
 import { useState } from "react";
-import Footer from "@/components/Footer";
+import UIDInitializer from "@/components/UIDInitializer";
 
 export default function Home() {
   const [courses, loading, error] = useCollection(
@@ -22,6 +22,7 @@ export default function Home() {
 
   return (
     <div className="relative">
+      <UIDInitializer/>
       <div className="fixed top-0 left-0 right-0 bg-white z-50 shadow-md sauder-blue-bk">
         <header className="container mx-auto px-4 py-4">
           <h1 className="text-4xl font-bold text-white mb-4">Sauder Course Reviews</h1>

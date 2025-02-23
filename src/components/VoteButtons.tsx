@@ -1,17 +1,17 @@
 // @ts-nocheck
 "use client";
 import { useState } from "react";
-import { doc, updateDoc, increment, getDoc, deleteField} from "firebase/firestore";
+import { doc, updateDoc, increment, getDoc, deleteField } from "firebase/firestore";
 import { db } from "@/firebase/clientApp";
 import { ArrowUp, ArrowDown } from "lucide-react";
+import { getOrSetUID } from "@/lib/uid";
 
 export default function VoteButtons({ courseCode, reviewId, initialVotes, initialUserVote }) {
   const [votes, setVotes] = useState(initialVotes);
-  // Temporary UID – to be replaced with one generated/stored on the client.
-  const currentUID = "temp-uid";
+
+  const currentUID = getOrSetUID();
   // Local state to track if the user has voted already for visual feedback.
   const [userVote, setUserVote] = useState(initialUserVote);
-
 
   const handleVote = async (voteType: number) => {
     try {
@@ -56,19 +56,21 @@ export default function VoteButtons({ courseCode, reviewId, initialVotes, initia
   };
 
   return (
-    <div className={`inline-flex items-center rounded-full px-3 py-1 space-x-2 ${
-      userVote === 1 ? "bg-green-600" : userVote === -1 ? "bg-red-600" : "bg-gray-300"}`}>    
+    <div
+      className={`inline-flex items-center rounded-full px-3 py-1 space-x-2 ${
+        userVote === 1 ? "bg-green-600" : userVote === -1 ? "bg-red-600" : "bg-gray-300"}`}>
       <button onClick={() => handleVote(1)} className="hover:text-green-600">
-        <ArrowUp 
+        <ArrowUp
           strokeWidth={userVote === 1 ? 3 : 1}
-          className={`h-6 w-6 ${userVote != 0 ? "text-white" : ""}`} />
+          className={`h-6 w-6 ${userVote !== 0 ? "text-white" : ""}`}
+        />
       </button>
       <span className="text-sm font-bold">{votes}</span>
       <button onClick={() => handleVote(-1)} className="hover:text-red-600">
-      <ArrowDown
-        strokeWidth={userVote === -1 ? 3 : 1}
-        className={`h-6 w-6 ${userVote !== 0 ? "text-white" : ""}`}
-      />
+        <ArrowDown
+          strokeWidth={userVote === -1 ? 3 : 1}
+          className={`h-6 w-6 ${userVote !== 0 ? "text-white" : ""}`}
+        />
       </button>
     </div>
   );

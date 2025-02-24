@@ -18,8 +18,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
         <body className="min-h-screen flex flex-col">
-          <main className="flex-grow">{children}</main>
+        <main className="min-h-screen flex flex-col">
+          <div className="flex-1">{children}</div>
           <Footer />
+        </main>
         </body>
     </html>
   );

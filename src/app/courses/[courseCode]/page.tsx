@@ -58,7 +58,7 @@ export default function CoursePage({ params }) {
     fetchData();
   }, [courseCode]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div></div>;
   if (!course) return <div>Pick Another Course!</div>;
 
   const reviews = course.reviews;
@@ -67,7 +67,7 @@ export default function CoursePage({ params }) {
     <div className="relative">
       <div className="fixed top-0 left-0 right-0 bg-white z-50 shadow-md sauder-blue-bk">
         <header className="container mx-auto px-4 py-4">
-          <h1 className="text-4xl font-bold text-white mb-4">Sauder Course Reviews</h1>
+          <h1 className="text-4xl font-bold text-white mb-4">UBC Course Reviews</h1>
           <div className="flex gap-2 overflow-x-auto pb-2">
             <Link
               href="/"

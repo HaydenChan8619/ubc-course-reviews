@@ -8,6 +8,7 @@ import { useState } from "react";
 import UIDInitializer from "@/components/UIDInitializer";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel } from "@/components/ui/dropdown-menu";
 import { useMemo } from "react";
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
   const [courses, loading, error] = useCollection(
@@ -28,6 +29,7 @@ export default function Home() {
 
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
   const [selectedFaculty, setSelectedFaculty] = useState<string>('All Faculties');
+  const [visibleCount, setVisibleCount] = useState(15);
 
   const filteredCourses = courses?.docs.filter(doc => {
     const data = doc.data();
@@ -38,12 +40,22 @@ export default function Home() {
     return matchesYear && matchesFaculty;
   });
 
+  const sortedCourses = filteredCourses?.sort(
+    (a, b) => b.data().reviewCount - a.data().reviewCount
+  );
+
+  const coursesToShow = sortedCourses?.slice(0, visibleCount);
+
+  const handleShowMore = () => {
+    setVisibleCount(prevCount => prevCount + 15);
+  };
+
   return (
     <div className="relative">
       <UIDInitializer />
       <div className="fixed top-0 left-0 right-0 bg-white z-50 shadow-md sauder-blue-bk">
       <header className="container mx-auto px-4 py-4">
-        <h1 className="text-4xl font-bold text-white mb-4">Sauder Course Reviews</h1>
+        <h1 className="text-4xl font-bold text-white mb-4">UBC Course Reviews</h1>
         <div className="flex gap-2 overflow-x-auto pb-2 sauder">
           <DropdownMenu>
             <DropdownMenuTrigger 
@@ -95,8 +107,7 @@ export default function Home() {
               setSelectedYear(null);
               setSelectedFaculty("All Faculties");
             }}
-            className="px-4 py-2 rounded-full text-sm font-medium bg-red-500 text-white hover:bg-red-700 transition-colors"
-          >
+            className="px-4 py-2 rounded-full text-sm font-medium bg-red-500 text-white hover:bg-red-700 transition-colors">
             Reset Filters
           </button>
         </div>
@@ -106,17 +117,26 @@ export default function Home() {
         <div className="pt-8 max-md:pt-16"></div>
         <div className="max-md:pt-8"></div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredCourses?.map((doc) => {
-            const courseData = doc.data();
-            return (
-              <CourseCard 
-                key={doc.id}
-                course={courseData}
-              />
-            );
-          })}
-        </div>
+            {coursesToShow?.map((doc) => {
+              const courseData = doc.data();
+              return (
+                <CourseCard 
+                  key={doc.id}
+                  course={courseData}
+                />
+              );
+            })}
+          </div>
 
+          {sortedCourses && visibleCount < sortedCourses.length && (
+            <div className="flex justify-center pt-4">
+                  <div className="px-4 py-2 rounded-full text-sm font-medium bg-gray-500 text-white hover:bg-gray-700 transition-colors block mx-auto">
+                    <button onClick={handleShowMore}>
+                      Show More
+                    </button>
+                    </div>
+                  </div>
+                )}
         
 
         <div className={`fixed inset-0 top-16 backdrop-blur-md flex items-center justify-center transition-opacity ${

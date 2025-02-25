@@ -54,9 +54,9 @@ export default function Home() {
     <div className="relative">
       <UIDInitializer />
       <div className="fixed top-0 left-0 right-0 bg-white z-50 shadow-md sauder-blue-bk">
-      <header className="container mx-auto px-4 py-4">
+      <header className="container mx-auto px-4 py-4 text-center">
         <h1 className="text-4xl font-bold text-white mb-4">UBC Course Reviews</h1>
-        <div className="flex gap-2 overflow-x-auto pb-2 sauder">
+        <div className="flex gap-2 overflow-x-auto pb-2 flex justify-center">
           <DropdownMenu>
             <DropdownMenuTrigger 
               className={`px-4 py-2 rounded-full text-sm font-medium focus:outline-none ${

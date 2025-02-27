@@ -40,7 +40,7 @@ const AboutPage = () => {
             <p>
               During the spring reading break of 2025 <br/>
               Hayden got annoyed that his friend kept planning a PolyU Course Review Website without starting<br/>
-              so he decided to write one and prove to him that it's super doable!
+              so he decided to write one and prove to him that it&apos;s super doable!
             </p>
           </CardContent>
         </Card>

@@ -6,8 +6,9 @@ import Footer from '@/components/Footer';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Course Reviews',
-  description: 'Find and review courses',
+  title: 'UBC Course Reviews',
+  description: 'Course Reviews by Students, for Students.',
+  icons: '/logo.png',
 };
 
 export default function RootLayout({

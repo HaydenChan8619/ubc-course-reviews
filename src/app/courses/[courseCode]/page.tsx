@@ -13,6 +13,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import VoteButtons from "@/components/VoteButtons";
 import { db } from "@/firebase/clientApp";
 import { getOrSetUID } from "@/lib/uid";
+import Navbar from "@/components/Navbar";
 
 function getRating(doc) {
   let count = 0;
@@ -65,24 +66,12 @@ export default function CoursePage({ params }) {
 
   return (
     <div className="relative">
-      <div className="fixed top-0 left-0 right-0 bg-white z-50 shadow-md sauder-blue-bk">
-        <header className="container mx-auto px-4 py-4 text-center">
-          <h1 className="text-4xl font-bold text-white mb-4">UBC Course Reviews</h1>
-          <div className="flex gap-2 overflow-x-auto pb-2 flex justify-center">
-            <Link
-              href="/"
-              className="px-4 py-2 rounded-full text-sm font-medium bg-white text-black hover:bg-gray-300 transition-colors"
-            >
-              Back to Home Page
-            </Link>
-          </div>
-        </header>
-      </div>
-      <div className="pt-8 max-md:pt-16"></div>
-      <main className="container mx-auto px-4 py-8 pt-32">
+      <Navbar/>
+      <main className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
-            <h1 className="text-4xl font-bold mb-2">{course.code}</h1>
+            <Button onClick={() => window.location.href='/courses'}>Back to Courses</Button>
+            <h1 className="text-4xl font-bold mb-2 mt-8">{course.code}</h1>
             <h2 className="text-2xl text-muted-foreground mb-4">{course.name}</h2>
             <div className="flex items-center gap-2 mb-4">
               <Star className="h-6 w-6 fill-yellow-400 text-yellow-400" />

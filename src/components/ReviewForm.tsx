@@ -77,9 +77,8 @@ export function ReviewForm({ courseCode, onSubmit }: ReviewFormProps) {
 
   const handleSubmit = (values: z.infer<typeof reviewSchema>) => {
     updateDatabase(courseCode, values).finally(() => {
-      router.refresh();
+      window.location.reload();
     });
-    
     onSubmit();
   };
 

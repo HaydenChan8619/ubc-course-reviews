@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useState } from "react";
 import { ReviewForm } from "./ReviewForm";
+import { useRouter } from "next/navigation";
 
 interface ClientReviewDialogProps {
   courseCode: string;
@@ -11,6 +12,7 @@ interface ClientReviewDialogProps {
 
 export function ClientReviewDialog({ courseCode }: ClientReviewDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>

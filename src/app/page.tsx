@@ -45,22 +45,22 @@ export default function LandingPage() {
           className="absolute top-0 left-0 w-full h-full"
         />
         <div className="relative text-center h-[40%]">
-          <h1 className="text-5xl font-bold mb-4">UBC Course Reviews</h1>
-          <p className="text-lg mb-8">Course Reviews by Students, for Students.</p>
+          <h1 className="text-3xl md:text-5xl font-bold mb-4">UBC Course Reviews</h1>
+          <p className="text-sm md:text-lg mb-8 italic">Course Reviews by Students, for Students.</p>
           <div className="flex justify-center mb-8">
             <Input
               type="text"
               placeholder="Search courses..."
-              className="w-64 md:w-96 bg-white text-black"
+              className="w-55 md:w-96 bg-white text-black"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={handleKeyDown}
             />
-            <Button className="ml-2"  onClick={handleSearch}>Search</Button>
+            <Button className="md:ml-2 scale-[0.8] md:scale-100" onClick={handleSearch}>Search</Button>
           </div>
           <div className="space-x-4" >
             <Link href='/courses'>
-              <Button variant="secondary">Explore Courses</Button>
+              <Button variant="secondary" className='scale-[0.9] md:scale-100'>Explore Courses</Button>
             </Link>
           </div>
         </div>

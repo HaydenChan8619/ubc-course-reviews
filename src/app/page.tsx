@@ -44,9 +44,9 @@ export default function LandingPage() {
           transition={{ repeat: Infinity, duration: 10 }}
           className="absolute top-0 left-0 w-full h-full"
         />
-        <div className="relative text-center h-[40%]">
-          <h1 className="text-3xl md:text-5xl font-bold mb-4">UBC Course Reviews</h1>
-          <p className="text-sm md:text-lg mb-8 italic">Course Reviews by Students, for Students.</p>
+        <div className="relative text-center h-[50%] md:h-[40%]">
+          <h1 className="text-2xl md:text-5xl font-bold mb-4">UBC Course Reviews</h1>
+          <p className="text-xs md:text-lg mb-8 italic">Course Reviews by Students, for Students.</p>
           <div className="flex justify-center mb-8">
             <Input
               type="text"

@@ -51,16 +51,16 @@ export default function LandingPage() {
             <Input
               type="text"
               placeholder="Search courses..."
-              className="w-55 md:w-96 bg-white text-black"
+              className="w-[175px] sm:w-[150px] md:w-[300px] bg-white text-black"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={handleKeyDown}
             />
-            <Button className="md:ml-2 scale-[0.8] md:scale-100" onClick={handleSearch}>Search</Button>
+            <Button className="md:ml-2 scale-[0.8] md:scale-100 font-bold" onClick={handleSearch}>Search</Button>
           </div>
           <div className="space-x-4" >
             <Link href='/courses'>
-              <Button variant="secondary" className='scale-[0.9] md:scale-100'>Explore Courses</Button>
+              <Button variant="secondary" className='font-bold scale-[0.9] md:scale-100'>Explore Courses</Button>
             </Link>
           </div>
         </div>

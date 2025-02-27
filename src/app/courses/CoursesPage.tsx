@@ -103,7 +103,7 @@ export default function CoursesPage() {
             onChange={(e) => setNewSearchQuery(e.target.value)}
             onKeyDown={handleKeyDown}
           />
-          <Button className="ml-2" onClick={handleSearch}>Search</Button>
+          <Button className="ml-2 font-bold" onClick={handleSearch}>Search</Button>
           <div className="ml-8"></div>
 
           <DropdownMenu>

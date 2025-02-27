@@ -8,7 +8,7 @@ export default function Navbar() {
     <nav className="sticky top-0 z-50 sauder-blue-bk text-white shadow">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <Link href="/">
-          <span className="text-2xl font-bold cursor-pointer">UBC Course Reviews</span>
+          <span className="text-xl md:text-2xl font-bold cursor-pointer">UBC Course Reviews</span>
         </Link>
         {/* Desktop Navigation */}
         <div className="hidden md:flex space-x-4">
@@ -55,11 +55,6 @@ export default function Navbar() {
             <Link href="/about">
               <span className="block px-3 py-2 rounded-md text-base font-medium hover:underline cursor-pointer">
                 About
-              </span>
-            </Link>
-            <Link href="/contact">
-              <span className="block px-3 py-2 rounded-md text-base font-medium hover:underline cursor-pointer">
-                Contact
               </span>
             </Link>
           </div>

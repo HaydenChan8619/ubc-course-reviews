@@ -5,13 +5,14 @@ import { CourseCard } from "@/components/CourseCard";
 import { db } from "@/firebase/clientApp";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { collection } from "firebase/firestore";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import UIDInitializer from "@/components/UIDInitializer";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Input } from "@/components/ui/input";
+import { ChevronDownIcon } from '@heroicons/react/24/outline'
 
 export default function CoursesPage() {
   const router = useRouter();
@@ -37,7 +38,7 @@ export default function CoursesPage() {
   const [selectedYear, setSelectedYear] = useState(null);
   const [selectedFaculty, setSelectedFaculty] = useState('All Faculties');
   const [visibleCount, setVisibleCount] = useState(15);
-  const [newSearchQuery, setNewSearchQuery] = useState('');
+  const [newSearchQuery, setNewSearchQuery] = useState(searchQuery == null ? '' : searchQuery);
 
   const filteredCourses = courses?.docs.filter(doc => {
     const data = doc.data();
@@ -89,6 +90,16 @@ export default function CoursesPage() {
     router.push('/courses');
   };
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      handleSearch();
+    }, 1);
+
+    return () => clearTimeout(timer);
+  }, [newSearchQuery]);
+
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
+
   return (
     <div className="relative">
       <UIDInitializer />
@@ -103,12 +114,13 @@ export default function CoursesPage() {
             onChange={(e) => setNewSearchQuery(e.target.value)}
             onKeyDown={handleKeyDown}
           />
-          <Button className="ml-2 font-bold" onClick={handleSearch}>Search</Button>
+          {/*<Button className="ml-2 font-bold" onClick={handleSearch}>Search</Button> */}
           <div className="ml-8"></div>
 
           <DropdownMenu>
-            <DropdownMenuTrigger className="bg-gray-500 text-white px-4 rounded outline-black text-sm">
+            <DropdownMenuTrigger className="bg-gray-500 text-white px-4 rounded outline-black text-sm flex items-center">
               {selectedYear ? `Year ${selectedYear}` : "All Years"}
+              <ChevronDownIcon className="ml-2 h-4 w-4" />
             </DropdownMenuTrigger>
             <DropdownMenuContent className="bg-gray-500 text-white">
               <DropdownMenuItem onClick={() => setSelectedYear(null)}>
@@ -133,8 +145,9 @@ export default function CoursesPage() {
 
           {/* Faculty Dropdown */}
           <DropdownMenu>
-            <DropdownMenuTrigger className="bg-gray-500 text-white px-4 rounded outline-black text-sm">
+            <DropdownMenuTrigger className="bg-gray-500 text-white px-4 rounded outline-black text-sm flex items-center">
               {selectedFaculty}
+              <ChevronDownIcon className="ml-2 h-4 w-4" />
             </DropdownMenuTrigger>
             <DropdownMenuContent className="bg-gray-500 text-white">
               <DropdownMenuItem onClick={() => setSelectedFaculty("All Faculties")}>

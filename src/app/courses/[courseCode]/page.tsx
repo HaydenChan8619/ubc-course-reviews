@@ -71,15 +71,15 @@ export default function CoursePage({ params }) {
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
             <Button onClick={() => window.location.href='/courses'}>Back to Courses</Button>
-            <h1 className="text-4xl font-bold mb-2 mt-8">{course.code}</h1>
-            <h2 className="text-2xl text-muted-foreground mb-4">{course.name}</h2>
+            <h1 className="text-2xl md:text-4xl font-bold mb-2 mt-8">{course.code}</h1>
+            <h2 className="text-xl md:text-2xl text-muted-foreground mb-4">{course.name}</h2>
             <div className="flex items-center gap-2 mb-4">
               <Star className="h-6 w-6 fill-yellow-400 text-yellow-400" />
-              <span className="text-xl font-medium">{getRating(course)}</span>
+              <span className="text-lg md:text-xl font-medium">{getRating(course)}</span>
             </div>
             <Accordion type="single" collapsible className="w-full border border-gray-300 rounded-lg">
               <AccordionItem value="item-1">
-                <AccordionTrigger className="text-lg font-bold pl-4">
+                <AccordionTrigger className="text-md md:text-lg font-bold pl-4">
                   Course Description
                 </AccordionTrigger>
                 <AccordionContent className="pl-4 pr-4">

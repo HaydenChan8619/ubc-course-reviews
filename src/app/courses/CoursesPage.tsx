@@ -1,18 +1,18 @@
-// @ts-nocheck
+//@ts-nocheck
 'use client';
 
 import { CourseCard } from "@/components/CourseCard";
 import { db } from "@/firebase/clientApp";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { collection } from "firebase/firestore";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import UIDInitializer from "@/components/UIDInitializer";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Input } from "@/components/ui/input";
-import { ChevronDownIcon } from '@heroicons/react/24/outline';
+import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 import { MobileFilterDialog } from "@/components/MobileFilterDialog";
 
 export default function CoursesPage() {
@@ -40,6 +40,9 @@ export default function CoursesPage() {
   const [selectedFaculty, setSelectedFaculty] = useState('All Faculties');
   const [visibleCount, setVisibleCount] = useState(15);
   const [newSearchQuery, setNewSearchQuery] = useState(searchQuery == null ? '' : searchQuery);
+
+  // Create a ref for the search input
+  const searchInputRef = useRef(null);
 
   const filteredCourses = courses?.docs.filter(doc => {
     const data = doc.data();
@@ -101,9 +104,22 @@ export default function CoursesPage() {
 
   const [showMobileFilters, setShowMobileFilters] = useState(false);
 
+  // New function to focus on the search bar
+  const focusTop = () => {
+    if (searchInputRef.current) {
+      // Smoothly scroll the search input into view
+      searchInputRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Optionally delay the focus to allow the scroll animation to finish
+      setTimeout(() => {
+        searchInputRef.current.focus();
+      }, 1000); // adjust the delay as needed
+    }
+  };
+
   return (
     <div className="relative">
       <UIDInitializer />
+      <div ref={searchInputRef} />
       <Navbar />
       <main className="container mx-auto px-4 pt-4 pb-4">
         {/* Combined Search Input & Filter Button Row */}
@@ -149,7 +165,7 @@ export default function CoursesPage() {
                 {selectedFaculty}
                 <ChevronDownIcon className="ml-2 h-4 w-4" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-gray-600 text-white">
+              <DropdownMenuContent className="bg-gray-600 text-white max-h-[215px] overflow-y-auto">
                 <DropdownMenuItem onClick={() => setSelectedFaculty("All Faculties")}>
                   All Faculties
                 </DropdownMenuItem>
@@ -166,12 +182,12 @@ export default function CoursesPage() {
             </Button>
           </div>
           <MobileFilterDialog
-          selectedYear={selectedYear}
-          setSelectedYear={setSelectedYear}
-          selectedFaculty={selectedFaculty}
-          setSelectedFaculty={setSelectedFaculty}
-          faculties={faculties}
-        />
+            selectedYear={selectedYear}
+            setSelectedYear={setSelectedYear}
+            selectedFaculty={selectedFaculty}
+            setSelectedFaculty={setSelectedFaculty}
+            faculties={faculties}
+          />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -184,6 +200,12 @@ export default function CoursesPage() {
               />
             );
           })}
+        </div>
+
+        <div className="fixed bottom-8 right-8 z-50">
+          {(
+            <Button onClick={focusTop}><ChevronUpIcon/></Button>
+          )}
         </div>
 
         {/* Show More Button */}

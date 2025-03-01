@@ -29,7 +29,7 @@ export function CourseCard({ course }: CourseCardProps) {
       <Card className="hover:shadow-lg transition-shadow cursor-pointer">
         <CardHeader className="pb-2">
           <h3 className="font-bold text-lg">{course.code}</h3>
-          <p className="text-muted-foreground">{course.name}</p>
+          <p className="text-muted-foreground truncate">{course.name}</p>
         </CardHeader>
         <CardContent>
           <div className="flex items-center gap-1">

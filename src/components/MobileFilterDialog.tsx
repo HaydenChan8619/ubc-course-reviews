@@ -71,7 +71,7 @@ export function MobileFilterDialog({
                 {selectedFaculty}
                 <ChevronDownIcon className="ml-2 h-4 w-4" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-gray-700 text-white w-[calc(90vw-2rem)] sm:w-[425px]">
+              <DropdownMenuContent className="bg-gray-700 text-white w-[calc(90vw-2rem)] sm:w-[425px] max-h-[215px] overflow-y-auto">
                 <DropdownMenuItem onClick={() => setSelectedFaculty("All Faculties")}>
                   All Faculties
                 </DropdownMenuItem>

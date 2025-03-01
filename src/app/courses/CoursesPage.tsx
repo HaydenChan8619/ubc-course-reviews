@@ -12,7 +12,8 @@ import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Input } from "@/components/ui/input";
-import { ChevronDownIcon } from '@heroicons/react/24/outline'
+import { ChevronDownIcon } from '@heroicons/react/24/outline';
+import { MobileFilterDialog } from "@/components/MobileFilterDialog";
 
 export default function CoursesPage() {
   const router = useRouter();
@@ -105,68 +106,72 @@ export default function CoursesPage() {
       <UIDInitializer />
       <Navbar />
       <main className="container mx-auto px-4 pt-4 pb-4">
-        <div className="flex justify-start mb-4">
-          <Input
-            type="text"
-            placeholder="Search courses..."
-            className="w-64 md:w-96 bg-white text-black outline-black"
-            value={newSearchQuery}
-            onChange={(e) => setNewSearchQuery(e.target.value)}
-            onKeyDown={handleKeyDown}
-          />
-          {/*<Button className="ml-2 font-bold" onClick={handleSearch}>Search</Button> */}
-          <div className="ml-8"></div>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger className="bg-gray-500 text-white px-4 rounded outline-black text-sm flex items-center">
-              {selectedYear ? `Year ${selectedYear}` : "All Years"}
-              <ChevronDownIcon className="ml-2 h-4 w-4" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="bg-gray-500 text-white">
-              <DropdownMenuItem onClick={() => setSelectedYear(null)}>
-                All Years
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setSelectedYear(1)}>
-                Year 1
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setSelectedYear(2)}>
-                Year 2
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setSelectedYear(3)}>
-                Year 3
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setSelectedYear(4)}>
-                Year 4
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <div className="ml-2"></div>
-
-          {/* Faculty Dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger className="bg-gray-500 text-white px-4 rounded outline-black text-sm flex items-center">
-              {selectedFaculty}
-              <ChevronDownIcon className="ml-2 h-4 w-4" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="bg-gray-500 text-white">
-              <DropdownMenuItem onClick={() => setSelectedFaculty("All Faculties")}>
-                All Faculties
-              </DropdownMenuItem>
-              {faculties.map((fac) => (
-                <DropdownMenuItem key={fac} onClick={() => setSelectedFaculty(fac)}>
-                  {fac}
+        {/* Combined Search Input & Filter Button Row */}
+        <div className="flex items-center mb-4">
+          <div className="flex-1">
+            <Input
+              type="text"
+              placeholder="Search courses..."
+              className="w-full bg-white text-black outline-black"
+              value={newSearchQuery}
+              onChange={(e) => setNewSearchQuery(e.target.value)}
+              onKeyDown={handleKeyDown}
+            />
+          </div>
+          {/* Desktop Inline Filter Controls (unchanged) */}
+          <div className="hidden md:flex items-center ml-8 space-x-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger className="bg-gray-500 text-white px-4 py-2 rounded outline-black text-sm flex items-center">
+                {selectedYear ? `Year ${selectedYear}` : "All Years"}
+                <ChevronDownIcon className="ml-2 h-4 w-4" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="bg-gray-600 text-white">
+                <DropdownMenuItem onClick={() => setSelectedYear(null)}>
+                  All Years
                 </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+                <DropdownMenuItem onClick={() => setSelectedYear(1)}>
+                  Year 1
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setSelectedYear(2)}>
+                  Year 2
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setSelectedYear(3)}>
+                  Year 3
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setSelectedYear(4)}>
+                  Year 4
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
-          <div className="ml-2"></div>
+            <DropdownMenu>
+              <DropdownMenuTrigger className="bg-gray-500 text-white px-4 py-2 rounded outline-black text-sm flex items-center">
+                {selectedFaculty}
+                <ChevronDownIcon className="ml-2 h-4 w-4" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="bg-gray-600 text-white">
+                <DropdownMenuItem onClick={() => setSelectedFaculty("All Faculties")}>
+                  All Faculties
+                </DropdownMenuItem>
+                {faculties.map((fac) => (
+                  <DropdownMenuItem key={fac} onClick={() => setSelectedFaculty(fac)}>
+                    {fac}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
 
-          {/* Clear Filters Button */}
-          <Button variant="destructive" onClick={clearFilters}>
-            Clear Filters
-          </Button>
+            <Button variant="destructive" onClick={clearFilters}>
+              Clear Filters
+            </Button>
+          </div>
+          <MobileFilterDialog
+          selectedYear={selectedYear}
+          setSelectedYear={setSelectedYear}
+          selectedFaculty={selectedFaculty}
+          setSelectedFaculty={setSelectedFaculty}
+          faculties={faculties}
+        />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -181,6 +186,7 @@ export default function CoursesPage() {
           })}
         </div>
 
+        {/* Show More Button */}
         {sortedCourses && visibleCount < sortedCourses.length && (
           <div className="flex justify-center pt-4">
             <div className="px-4 py-2 mx-auto">
@@ -189,6 +195,7 @@ export default function CoursesPage() {
           </div>
         )}
 
+        {/* Loading Indicator */}
         <div className={`fixed inset-0 top-16 backdrop-blur-md flex items-center justify-center transition-opacity ${
           loading ? 'opacity-300' : 'opacity-0 pointer-events-none'
         }`}>

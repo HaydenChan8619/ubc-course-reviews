@@ -47,7 +47,7 @@ export default function CoursesPage() {
   const filteredCourses = courses?.docs.filter(doc => {
     const data = doc.data();
     const courseYear = parseInt(data.code.charAt(5));
-    const courseFaculty = data.code.substring(0, 4);
+    const courseFaculty = data.code.split(' ')[0];
     const matchesYear = !selectedYear || courseYear === selectedYear;
     const matchesFaculty = selectedFaculty === 'All Faculties' || courseFaculty === selectedFaculty;
 

@@ -90,7 +90,7 @@ export function ReviewForm({ courseCode, onSubmit }: ReviewFormProps) {
           name="usefulness"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Usefulness</FormLabel>
+              <FormLabel>Usefulness <i className="text-muted-foreground">(1 for Useless, 5 for Super Useful)</i></FormLabel>
               <FormControl>
                 <StarRating rating={field.value || 0} onChange={field.onChange} />
               </FormControl>
@@ -104,7 +104,7 @@ export function ReviewForm({ courseCode, onSubmit }: ReviewFormProps) {
           name="easiness"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Easiness</FormLabel>
+              <FormLabel>Difficulty <i className="text-muted-foreground">(1 for Super Hard, 5 for Super Easy)</i></FormLabel>
               <FormControl>
                 <StarRating rating={field.value || 0} onChange={field.onChange} />
               </FormControl>
@@ -118,7 +118,7 @@ export function ReviewForm({ courseCode, onSubmit }: ReviewFormProps) {
           name="enjoyment"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Enjoyment</FormLabel>
+              <FormLabel>Enjoyment <i className="text-muted-foreground">(1 for Very Boring, 5 for Very Enjoyable)</i></FormLabel>
               <FormControl>
                 <StarRating rating={field.value || 0} onChange={field.onChange} />
               </FormControl>

@@ -118,7 +118,7 @@ export default function CoursePage({ params }) {
                               <div className="font-medium">{review.usefulness}/5</div>
                             </div>
                             <div className="text-sm">
-                              <span className="text-muted-foreground">Easiness:</span>
+                              <span className="text-muted-foreground">Difficulty:</span>
                               <div className="font-medium">{review.easiness}/5</div>
                             </div>
                             <div className="text-sm">

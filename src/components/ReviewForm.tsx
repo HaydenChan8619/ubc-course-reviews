@@ -33,7 +33,7 @@ function generateName() {
   return names[randomIndex];
 }
 
-async function updateDatabase (courseCode, data) {  
+/*async function updateDatabase (courseCode, data) {  
   const courseRef = doc(db, "courses", courseCode);
   const courseSnap = await getDoc(courseRef);
   const courseData = courseSnap.data();
@@ -59,7 +59,64 @@ async function updateDatabase (courseCode, data) {
       [`reviews.${newReviewId}`]: review,
       reviewCount: currentReviewCount + 1,
   });
-};
+}; */
+
+async function updateDatabase(courseCode, data) {
+  const courseRef = doc(db, "courses", courseCode);
+  const courseSnap = await getDoc(courseRef);
+  const courseData = courseSnap.data();
+
+  const currentReviewCount = courseData.reviewCount || 0;
+  const newReviewId = `review-${currentReviewCount + 1}`;
+
+  const overallRating = Math.round(
+    (Number(data.usefulness) + Number(data.easiness) + Number(data.enjoyment)) / 3
+  );
+  const authorName = data.name === "" ? generateName() : data.name;
+
+  const review = {
+    overallRating,
+    usefulness: Number(data.usefulness),
+    easiness: Number(data.easiness),
+    enjoyment: Number(data.enjoyment),
+    comments: data.comments,
+    name: authorName,
+    date: toZonedTime(new Date(), 'America/Vancouver'),
+    votes: 1,
+  };
+
+  // Update the course document with the new review and increment reviewCount
+  await updateDoc(courseRef, {
+    [`reviews.${newReviewId}`]: review,
+    reviewCount: currentReviewCount + 1,
+  });
+
+  // Calculate updated average rating using existing reviews from courseData and the new review.
+  const existingReviews = courseData.reviews || {};
+  let sumRatings = 0;
+  let countRatings = 0;
+  for (const key in existingReviews) {
+    if (existingReviews.hasOwnProperty(key)) {
+      sumRatings += Number(existingReviews[key].overallRating);
+      countRatings++;
+    }
+  }
+  // Include the new review in the calculations.
+  sumRatings += overallRating;
+  countRatings++;
+
+  const updatedReviewCount = currentReviewCount + 1;
+  const averageRating = countRatings > 0 ? Math.round(sumRatings / countRatings) : overallRating;
+
+  // Update the summary document.
+  // Adjust the collection name if your summary document is located elsewhere.
+  const summaryRef = doc(db, "courses", "summary");
+  await updateDoc(summaryRef, {
+    [`summary.${courseCode}.reviewCount`]: updatedReviewCount,
+    [`summary.${courseCode}.averageRating`]: averageRating,
+  });
+}
+
 
 export function ReviewForm({ courseCode, onSubmit }: ReviewFormProps) {
   const form = useForm<z.infer<typeof reviewSchema>>({
@@ -90,7 +147,7 @@ export function ReviewForm({ courseCode, onSubmit }: ReviewFormProps) {
           name="usefulness"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Usefulness <i className="text-muted-foreground">(1 for Useless, 5 for Super Useful)</i></FormLabel>
+              <FormLabel>Usefulness <i className="text-muted-foreground">(5 for Very Useful)</i></FormLabel>
               <FormControl>
                 <StarRating rating={field.value || 0} onChange={field.onChange} />
               </FormControl>
@@ -104,7 +161,7 @@ export function ReviewForm({ courseCode, onSubmit }: ReviewFormProps) {
           name="easiness"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Difficulty <i className="text-muted-foreground">(1 for Super Hard, 5 for Super Easy)</i></FormLabel>
+              <FormLabel>Difficulty <i className="text-muted-foreground">(5 for Very Easy)</i></FormLabel>
               <FormControl>
                 <StarRating rating={field.value || 0} onChange={field.onChange} />
               </FormControl>
@@ -118,7 +175,7 @@ export function ReviewForm({ courseCode, onSubmit }: ReviewFormProps) {
           name="enjoyment"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Enjoyment <i className="text-muted-foreground">(1 for Very Boring, 5 for Very Enjoyable)</i></FormLabel>
+              <FormLabel>Enjoyment <i className="text-muted-foreground">(5 for Very Enjoyable)</i></FormLabel>
               <FormControl>
                 <StarRating rating={field.value || 0} onChange={field.onChange} />
               </FormControl>

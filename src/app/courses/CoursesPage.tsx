@@ -3,8 +3,8 @@
 
 import { CourseCard } from "@/components/CourseCard";
 import { db } from "@/firebase/clientApp";
-import { useCollection } from "react-firebase-hooks/firestore";
-import { collection } from "firebase/firestore";
+import { useCollection, useDocument } from "react-firebase-hooks/firestore";
+import { collection, doc } from "firebase/firestore";
 import { useState, useMemo, useEffect, useRef } from "react";
 import UIDInitializer from "@/components/UIDInitializer";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
@@ -20,21 +20,28 @@ export default function CoursesPage() {
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get('search');
 
-  const [courses, loading, error] = useCollection(
-    collection(db, "courses"),
-    {}
-  );
+  const [summaryDoc, loading, error] = useDocument(doc(db, "courses", "summary"));
+
+  const summaryMap = summaryDoc?.data()?.summary || {};
+
+  const courses = useMemo(() => {
+    return Object.entries(summaryMap).map(([id, data]) => ({
+      id,
+      data: () => data,
+    }));
+  }, [summaryMap]);
 
   const faculties = useMemo(() => {
-    if (!courses?.docs) return [];
     const facultiesSet = new Set();
-    courses.docs.forEach(doc => {
-      const code = doc.data().code;
-      const faculty = code.split(' ')[0];
-      facultiesSet.add(faculty);
+    courses.forEach(course => {
+      const code = course.data().code;
+        const faculty = code.split(' ')[0];
+        if (faculty) {
+          facultiesSet.add(faculty);
+        }
     });
     return Array.from(facultiesSet).sort();
-  }, [courses?.docs]);
+  }, [courses]);
 
   const [selectedYear, setSelectedYear] = useState(null);
   const [selectedFaculty, setSelectedFaculty] = useState('All Faculties');
@@ -44,13 +51,14 @@ export default function CoursesPage() {
   // Create a ref for the search input
   const searchInputRef = useRef(null);
 
-  const filteredCourses = courses?.docs.filter(doc => {
-    const data = doc.data();
-    const courseYear = parseInt(data.code.charAt(5));
+  const filteredCourses = courses.filter(course => {
+    const data = course.data();
+  
+    const courseYear = parseInt(data.code.split(' ')[1].charAt(0));
     const courseFaculty = data.code.split(' ')[0];
     const matchesYear = !selectedYear || courseYear === selectedYear;
     const matchesFaculty = selectedFaculty === 'All Faculties' || courseFaculty === selectedFaculty;
-
+  
     let searchMatches = true;
     if (searchQuery) {
       const lowerQuery = searchQuery.toLowerCase();
@@ -59,9 +67,9 @@ export default function CoursesPage() {
         data.name.toLowerCase().includes(lowerQuery) ||
         data.description.toLowerCase().includes(lowerQuery);
     }
-
+  
     return matchesYear && matchesFaculty && searchMatches;
-  });
+  });  
 
   const sortedCourses = filteredCourses?.sort(
     (a, b) => b.data().reviewCount - a.data().reviewCount
@@ -193,6 +201,7 @@ export default function CoursesPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {coursesToShow?.map((doc) => {
             const courseData = doc.data();
+            console.log(courseData);
             return (
               <CourseCard
                 key={doc.id}
@@ -200,6 +209,16 @@ export default function CoursesPage() {
               />
             );
           })}
+          {/*courses.map((doc) => {
+            const courseData = doc.data();
+            console.log(courseData);
+            return (
+              <CourseCard
+                key={doc.id}
+                course={courseData}
+              />
+            );
+          })*/}
         </div>
 
         <div className="fixed bottom-8 right-8 z-50">

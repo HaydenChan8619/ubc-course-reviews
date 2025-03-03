@@ -34,7 +34,7 @@ export function CourseCard({ course }: CourseCardProps) {
         <CardContent>
           <div className="flex items-center gap-1">
             <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-            <span className="font-medium">{getRating(course)}</span>
+            <span className="font-medium">{course.averageRating}</span>
           </div>
         </CardContent>
       </Card>

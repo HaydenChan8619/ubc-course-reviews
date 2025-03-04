@@ -7,12 +7,12 @@ export default function Navbar() {
   return (
     <nav className="sticky top-0 z-50 sauder-blue-bk text-white shadow">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <Link href="/">
+        <Link href="/" prefetch={false}>
           <span className="text-xl md:text-2xl font-bold cursor-pointer">UBC Course Reviews</span>
         </Link>
         {/* Desktop Navigation */}
         <div className="hidden md:flex space-x-4">
-          <Link href="/about">
+          <Link href="/about" prefetch={false}>
             <span className="hover:underline font-bold cursor-pointer">About</span>
           </Link>
         </div>
@@ -47,12 +47,12 @@ export default function Navbar() {
       {isOpen && (
         <div className="md:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1">
-            <Link href="/courses">
+            <Link href="/courses" prefetch={false}>
               <span className="block px-3 py-2 rounded-md text-base font-medium hover:underline cursor-pointer">
                 Courses
               </span>
             </Link>
-            <Link href="/about">
+            <Link href="/about" prefetch={false}>
               <span className="block px-3 py-2 rounded-md text-base font-medium hover:underline cursor-pointer">
                 About
               </span>

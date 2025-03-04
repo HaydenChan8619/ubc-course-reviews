@@ -25,7 +25,7 @@ function getRating(doc: DocumentData): number {
 
 export function CourseCard({ course }: CourseCardProps) {
   return (
-    <Link href={`/courses/${course.code.toLowerCase().replace(' ', '-')}`}>
+    <Link href={`/courses/${course.code.toLowerCase().replace(' ', '-')}`} prefetch={false}>
       <Card className="hover:shadow-lg transition-shadow cursor-pointer">
         <CardHeader className="pb-2">
           <h3 className="font-bold text-lg">{course.code}</h3>

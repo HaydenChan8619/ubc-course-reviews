@@ -21,6 +21,7 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-blue-400 transition-colors duration-300"
+                prefetch={false}
               >
                 <FaGithub size={24} />
               </Link>
@@ -30,6 +31,7 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-blue-400 transition-colors duration-300"
+                prefetch={false}
               >
                 <FaLinkedin size={24} />
               </Link>
@@ -39,6 +41,7 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-blue-400 transition-colors duration-300"
+                prefetch={false}
               >
                 <FaYoutube size={24} />
               </Link>

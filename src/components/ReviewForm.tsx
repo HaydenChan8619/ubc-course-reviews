@@ -110,7 +110,7 @@ async function updateDatabase(courseCode, data) {
 
   // Update the summary document.
   // Adjust the collection name if your summary document is located elsewhere.
-  const summaryRef = doc(db, "courses", "summary");
+  const summaryRef = doc(db, "summary", "summary");
   await updateDoc(summaryRef, {
     [`summary.${courseCode}.reviewCount`]: updatedReviewCount,
     [`summary.${courseCode}.averageRating`]: averageRating,

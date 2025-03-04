@@ -20,7 +20,7 @@ export default function CoursesPage() {
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get('search');
 
-  const [summaryDoc, loading, error] = useDocument(doc(db, "courses", "summary"));
+  const [summaryDoc, loading, error] = useDocument(doc(db, "summary", "summary"));
 
   const summaryMap = summaryDoc?.data()?.summary || {};
 

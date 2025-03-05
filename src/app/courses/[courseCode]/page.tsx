@@ -14,6 +14,7 @@ import VoteButtons from "@/components/VoteButtons";
 import { db } from "@/firebase/clientApp";
 import { getOrSetUID } from "@/lib/uid";
 import Navbar from "@/components/Navbar";
+import StarRating from "@/components/StarRating";
 
 function getRating(doc) {
   let count = 0;
@@ -112,20 +113,46 @@ export default function CoursePage({ params }) {
                               {getDate(review)}
                             </span>
                           </div>
-                          <div className="grid grid-cols-3 gap-4 mb-4">
-                            <div className="text-sm">
-                              <span className="text-muted-foreground">Usefulness:</span>
-                              <div className="font-medium">{review.usefulness}/5</div>
+                          <div className="mb-4">
+                            {/* Mobile view: flex layout with aligned labels */}
+                            <div className="flex flex-col gap-2 md:hidden">
+                              <div className="flex items-center text-sm">
+                                <span className="w-32 text-muted-foreground">Usefulness:</span>
+                                <StarRating rating={review.usefulness} onChange={() => {}} size="text-lg" />
+                              </div>
+                              <div className="flex items-center text-sm">
+                                <span className="w-32 text-muted-foreground">Ease of Learning:</span>
+                                <StarRating rating={review.easiness} onChange={() => {}} size="text-lg" />
+                              </div>
+                              <div className="flex items-center text-sm">
+                                <span className="w-32 text-muted-foreground">Enjoyment:</span>
+                                <StarRating rating={review.enjoyment} onChange={() => {}} size="text-lg" />
+                              </div>
                             </div>
-                            <div className="text-sm">
-                              <span className="text-muted-foreground">Difficulty:</span>
-                              <div className="font-medium">{review.easiness}/5</div>
-                            </div>
-                            <div className="text-sm">
-                              <span className="text-muted-foreground">Enjoyment:</span>
-                              <div className="font-medium">{review.enjoyment}/5</div>
+
+                            {/* PC view (md and up): grid layout */}
+                            <div className="hidden md:grid md:grid-cols-3 md:gap-4">
+                              <div className="text-sm">
+                                <span className="text-muted-foreground">Usefulness:</span>
+                                <div className="font-medium">
+                                  <StarRating rating={review.usefulness} onChange={() => {}} size="text-lg"/>
+                                </div>
+                              </div>
+                              <div className="text-sm">
+                                <span className="text-muted-foreground">Ease of Learning:</span>
+                                <div className="font-medium">
+                                  <StarRating rating={review.easiness} onChange={() => {}} size="text-lg"/>
+                                </div>
+                              </div>
+                              <div className="text-sm">
+                                <span className="text-muted-foreground">Enjoyment:</span>
+                                <div className="font-medium">
+                                  <StarRating rating={review.enjoyment} onChange={() => {}} size="text-lg"/>
+                                </div>
+                              </div>
                             </div>
                           </div>
+
                           <p className="mb-4">{review.comments}</p>
                           <VoteButtons
                             courseCode={courseCode}

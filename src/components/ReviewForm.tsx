@@ -161,7 +161,7 @@ export function ReviewForm({ courseCode, onSubmit }: ReviewFormProps) {
           name="easiness"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Difficulty <i className="text-muted-foreground">(5 for Very Easy)</i></FormLabel>
+              <FormLabel>Ease of Learning <i className="text-muted-foreground">(5 for Very Easy)</i></FormLabel>
               <FormControl>
                 <StarRating rating={field.value || 0} onChange={field.onChange} />
               </FormControl>
@@ -191,7 +191,7 @@ export function ReviewForm({ courseCode, onSubmit }: ReviewFormProps) {
             <FormItem>
               <FormLabel>Comment <i className="text-muted-foreground">(Optional)</i></FormLabel>
               <FormControl>
-                <Textarea {...field} />
+                <Textarea {...field} placeholder="Opinions or tips for future students..."/>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -205,7 +205,7 @@ export function ReviewForm({ courseCode, onSubmit }: ReviewFormProps) {
             <FormItem>
               <FormLabel>Your Name <i className="text-muted-foreground">(Optional)</i></FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} showIcon={false}/>
               </FormControl>
               <FormMessage />
             </FormItem>

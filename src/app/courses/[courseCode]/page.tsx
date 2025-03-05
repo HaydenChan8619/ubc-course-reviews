@@ -15,6 +15,7 @@ import { db } from "@/firebase/clientApp";
 import { getOrSetUID } from "@/lib/uid";
 import Navbar from "@/components/Navbar";
 import StarRating from "@/components/StarRating";
+import Head from "next/head";
 
 function getRating(doc) {
   let count = 0;

@@ -71,9 +71,38 @@ export default function CoursesPage() {
     return matchesYear && matchesFaculty && searchMatches;
   });  
 
-  const sortedCourses = filteredCourses?.sort(
-    (a, b) => b.data().reviewCount - a.data().reviewCount
-  );
+  const sortedCourses = filteredCourses?.sort((a, b) => {
+    // Always sort by reviewCount first
+    const reviewDiff = b.data().reviewCount - a.data().reviewCount;
+    if (reviewDiff !== 0) return reviewDiff;
+  
+    // If no search query is provided, fallback to sorting by code
+    if (!searchQuery) {
+      return a.data().code.localeCompare(b.data().code);
+    }
+  
+    // Otherwise, compute a match score based on the search query
+    const query = searchQuery.toLowerCase();
+  
+    const getMatchScore = (course) => {
+      const { code, name, description } = course.data();
+      if (code.toLowerCase().includes(query)) return 3;
+      if (name.toLowerCase().includes(query)) return 2;
+      if (description.toLowerCase().includes(query)) return 1;
+      return 0;
+    };
+  
+    const scoreA = getMatchScore(a);
+    const scoreB = getMatchScore(b);
+  
+    // Higher score means a better match, so sort descending
+    if (scoreA !== scoreB) return scoreB - scoreA;
+  
+    // If both courses have the same score, sort by code
+    return a.data().code.localeCompare(b.data().code);
+  });
+  
+  
 
   const coursesToShow = sortedCourses?.slice(0, visibleCount);
 

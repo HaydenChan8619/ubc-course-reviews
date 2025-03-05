@@ -2,14 +2,13 @@
 'use client';
 
 import Head from 'next/head';
-import Script from 'next/script';
 
 export function GoogleAnalytics() {
 const googleTagId = process.env.NEXT_PUBLIC_GOOGLE_TAG_ID;
   return (
     <Head>
-      <Script async src={`https://www.googletagmanager.com/gtag/js?id=${googleTagId}`}></Script>
-      <Script
+      <script async src={`https://www.googletagmanager.com/gtag/js?id=${googleTagId}`}></script>
+      <script
         dangerouslySetInnerHTML={{
           __html: `
             window.dataLayer = window.dataLayer || [];

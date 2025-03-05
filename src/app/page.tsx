@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import Papa from 'papaparse';
 import { FaMagnifyingGlass } from "react-icons/fa6";
+import Head from 'next/head';
 
 export default function LandingPage() {
   const router = useRouter();
@@ -71,6 +72,13 @@ export default function LandingPage() {
   };
 
   return (
+    <>
+    <Head>
+        <meta
+          name="description"
+          content="UBC Course Reviews - the best place to rant about your courses, and learn more about courses you want to take!"
+        />
+    </Head>
     <div className="flex flex-col min-h-screen">
       <Navbar/>
       <motion.section
@@ -127,5 +135,6 @@ export default function LandingPage() {
         </div>
       </motion.section>
     </div>
+    </>
   );
 }

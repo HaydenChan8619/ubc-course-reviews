@@ -2,6 +2,8 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import Footer from '@/components/Footer';
+import Head from 'next/head';
+import { GoogleAnalytics } from '@/components/GoogleAnalytics';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -17,13 +19,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-        <body className="min-h-screen flex flex-col">
-        <main className="min-h-screen flex flex-col">
-          <div className="flex-1">{children}</div>
-          <Footer />
-        </main>
-        </body>
-    </html>
+    <>
+      <GoogleAnalytics />
+      <html lang="en" suppressHydrationWarning>
+          <body className="min-h-screen flex flex-col">
+          <main className="min-h-screen flex flex-col">
+            <div className="flex-1">{children}</div>
+            <Footer />
+          </main>
+          </body>
+      </html>
+    </>
   );
 }

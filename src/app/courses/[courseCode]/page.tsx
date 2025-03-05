@@ -61,8 +61,6 @@ export default function CoursePage({ params }) {
     fetchData();
   }, [courseCode]);
 
-  const reviews = course.reviews;
-
   if (loading) {
     return (
       <>
@@ -85,6 +83,8 @@ export default function CoursePage({ params }) {
       </>
     );
   }
+
+  const reviews = course.reviews;
 
   return (
     <>

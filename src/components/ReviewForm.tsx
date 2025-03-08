@@ -106,7 +106,7 @@ async function updateDatabase(courseCode, data) {
   countRatings++;
 
   const updatedReviewCount = currentReviewCount + 1;
-  const averageRating = countRatings > 0 ? Math.round(sumRatings / countRatings) : overallRating;
+  const averageRating = countRatings > 0 ? Math.round((sumRatings / countRatings) * 10) / 10 : overallRating;
 
   // Update the summary document.
   // Adjust the collection name if your summary document is located elsewhere.

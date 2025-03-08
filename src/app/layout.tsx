@@ -24,7 +24,8 @@ export default function RootLayout({
     <>
       <html lang="en" suppressHydrationWarning>
           <body className="min-h-screen flex flex-col">
-            <GoogleAnalytics gaId={googleTagId}></GoogleAnalytics>
+              <GoogleAnalytics gaId={googleTagId}></GoogleAnalytics>
+              <link rel="icon" href="/favicon.ico" />
           <main className="min-h-screen flex flex-col">
             <div className="flex-1">{children}</div>
             <Footer />

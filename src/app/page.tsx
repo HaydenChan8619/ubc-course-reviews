@@ -17,6 +17,7 @@ export default function LandingPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [courses, setCourses] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
+  const [isInputFocused, setIsInputFocused] = useState(false);
 
   // Load and parse CSV data on component mount.
   useEffect(() => {
@@ -29,32 +30,54 @@ export default function LandingPage() {
       .catch((err) => console.error('Error loading CSV:', err));
   }, []);
 
-  // Update suggestions as search query changes.
   useEffect(() => {
     if (searchQuery.trim() === '') {
       setSuggestions([]);
-    } else {
-      const lowerQuery = searchQuery.toLowerCase();
-      const scored = courses
-        .map(course => {
-          let score = Infinity;
-          // Prioritize code match first
-          if (course.code.toLowerCase().includes(lowerQuery)) {
+      return;
+    }
+  
+    // Remove all spaces from the search query and lowercase it.
+    const cleanedQuery = searchQuery.replace(/\s/g, '').toLowerCase();
+    const isNumericQuery = /^\d/.test(cleanedQuery);
+  
+    const scored = courses
+      .map(course => {
+        let score = Infinity;
+        // Prepare the course code by removing spaces and lowering case.
+        let courseCode = course.code.replace(/\s/g, '').toLowerCase();
+  
+        if (isNumericQuery) {
+          // If the query starts with a number, only compare against the numeric part.
+          const parts = course.code.split(' ');
+          if (parts.length > 1) {
+            courseCode = parts[1].replace(/\s/g, '').toLowerCase();
+          }
+          if (courseCode.startsWith(cleanedQuery)) {
             score = 1;
-          } else if (course.name.toLowerCase().includes(lowerQuery)) {
+          }
+        } else {
+          // For letter-based queries, check that the field starts with the query.
+          if (courseCode.startsWith(cleanedQuery)) {
+            score = 1;
+          } else if (
+            course.name.replace(/\s/g, '').toLowerCase().startsWith(cleanedQuery)
+          ) {
             score = 2;
-          } else if (course.description.toLowerCase().includes(lowerQuery)) {
+          } else if (
+            course.description.replace(/\s/g, '').toLowerCase().startsWith(cleanedQuery)
+          ) {
             score = 3;
           }
-          return { course, score };
-        })
-        .filter(item => item.score !== Infinity) // Only include courses that match somewhere
-        .sort((a, b) => a.score - b.score) // Sort by score: lower score first
-        .map(item => item.course);
-        
-      setSuggestions(scored.slice(0, 5));
-    }
-  }, [searchQuery, courses]);
+        }
+  
+        return { course, score };
+      })
+      .filter(item => item.score !== Infinity) // Only include courses that match
+      .sort((a, b) => a.score - b.score)
+      .map(item => item.course);
+  
+    setSuggestions(scored.slice(0, 5));
+  }, [searchQuery, courses]);  
   
 
   const handleSearch = () => {
@@ -102,27 +125,29 @@ export default function LandingPage() {
               className="w-50 md:w-80 bg-white text-black"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              onFocus={() => setIsInputFocused(true)}
+              onBlur={() => setTimeout(() => setIsInputFocused(false), 200)} // Delay so clicking a suggestion still works
               onKeyDown={handleKeyDown}
             />
             <Button className="ml-2 font-bold" onClick={handleSearch}>Search</Button>
-            {suggestions.length > 0 && (
+            {searchQuery.trim() && isInputFocused && suggestions.length > 0 && (
               <div className="md:ml-10 absolute top-full left-0 mt-2 w-[100%] md:w-[83.5%] bg-white text-black rounded shadow-lg z-10 text-left">
                 {suggestions.map((course) => (
                   <Link
-                  key={course.code}
-                  href={`/courses/${course.code.toLowerCase().replace(' ', '-')}`}
-                  prefetch={false}
-                >
-                  <div className="flex items-center px-3 py-2 hover:bg-gray-200 cursor-pointer rounded">
-                    {/* Fixed container for the icon */}
-                    <div className="w-6 h-6 flex-shrink-0 flex items-center justify-center">
-                      <FaMagnifyingGlass className="text-gray-400" />
+                    key={course.code}
+                    href={`/courses/${course.code.toLowerCase().replace(' ', '-')}`}
+                    prefetch={false}
+                  >
+                    <div className="flex items-center px-3 py-2 hover:bg-gray-200 cursor-pointer rounded">
+                      {/* Fixed container for the icon */}
+                      <div className="w-6 h-6 flex-shrink-0 flex items-center justify-center">
+                        <FaMagnifyingGlass className="text-gray-400" />
+                      </div>
+                      <span className="ml-2 text-sm truncate">
+                        {course.code} - {course.name}
+                      </span>
                     </div>
-                    <span className="ml-2 text-sm truncate">
-                      {course.code} - {course.name}
-                    </span>
-                  </div>
-                </Link>
+                  </Link>
                 ))}
               </div>
             )}

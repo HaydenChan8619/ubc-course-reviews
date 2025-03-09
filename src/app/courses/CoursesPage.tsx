@@ -3,8 +3,8 @@
 
 import { CourseCard } from "@/components/CourseCard";
 import { db } from "@/firebase/clientApp";
-import { useCollection, useDocument } from "react-firebase-hooks/firestore";
-import { collection, doc } from "firebase/firestore";
+import { useDocument } from "react-firebase-hooks/firestore";
+import { doc } from "firebase/firestore";
 import { useState, useMemo, useEffect, useRef } from "react";
 import UIDInitializer from "@/components/UIDInitializer";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
@@ -21,7 +21,6 @@ export default function CoursesPage() {
   const searchQuery = searchParams.get('search');
 
   const [summaryDoc, loading, error] = useDocument(doc(db, "summary", "summary"));
-
   const summaryMap = summaryDoc?.data()?.summary || {};
 
   const courses = useMemo(() => {
@@ -35,10 +34,10 @@ export default function CoursesPage() {
     const facultiesSet = new Set();
     courses.forEach(course => {
       const code = course.data().code;
-        const faculty = code.split(' ')[0];
-        if (faculty) {
-          facultiesSet.add(faculty);
-        }
+      const faculty = code.split(' ')[0];
+      if (faculty) {
+        facultiesSet.add(faculty);
+      }
     });
     return Array.from(facultiesSet).sort();
   }, [courses]);
@@ -48,17 +47,20 @@ export default function CoursesPage() {
   const [visibleCount, setVisibleCount] = useState(15);
   const [newSearchQuery, setNewSearchQuery] = useState(searchQuery == null ? '' : searchQuery);
 
+  // New state for sorting method: "reviews" (default) or "rating"
+  const [sortMethod, setSortMethod] = useState('reviews');
+
   // Create a ref for the search input
   const searchInputRef = useRef(null);
 
   const filteredCourses = courses.filter(course => {
     const data = course.data();
-  
+
     const courseYear = parseInt(data.code.split(' ')[1].charAt(0));
     const courseFaculty = data.code.split(' ')[0];
     const matchesYear = !selectedYear || courseYear === selectedYear;
     const matchesFaculty = selectedFaculty === 'All Faculties' || courseFaculty === selectedFaculty;
-  
+
     let searchMatches = true;
     if (searchQuery) {
       const lowerQuery = searchQuery.toLowerCase();
@@ -67,41 +69,123 @@ export default function CoursesPage() {
         data.name.toLowerCase().includes(lowerQuery) ||
         data.description.toLowerCase().includes(lowerQuery);
     }
-  
-    return matchesYear && matchesFaculty && searchMatches;
-  });  
 
-  const sortedCourses = filteredCourses?.sort((a, b) => {
-    // Always sort by reviewCount first
-    const reviewDiff = b.data().reviewCount - a.data().reviewCount;
-    if (reviewDiff !== 0) return reviewDiff;
-  
-    // If no search query is provided, fallback to sorting by code
+    return matchesYear && matchesFaculty && searchMatches;
+  });
+
+  /*const sortedCourses = filteredCourses?.sort((a, b) => {
+    const aData = a.data();
+    const bData = b.data();
+
+    // If there's no search query, sort by the selected method and then alphabetically.
     if (!searchQuery) {
-      return a.data().code.localeCompare(b.data().code);
+      if (sortMethod === 'reviews') {
+        const reviewDiff = bData.reviewCount - aData.reviewCount;
+        if (reviewDiff !== 0) return reviewDiff;
+      } else if (sortMethod === 'rating') {
+        // Assumes each course has a 'rating' field (e.g., average rating)
+        const ratingDiff = bData.averageRating - aData.averageRating;
+        if (ratingDiff !== 0) return ratingDiff;
+      }
+      return aData.code.localeCompare(bData.code);
     }
-  
-    // Otherwise, compute a match score based on the search query
+
+    // When there is a search query, first determine match priority
     const query = searchQuery.toLowerCase();
-  
-    const getMatchScore = (course) => {
-      const { code, name, description } = course.data();
-      if (code.toLowerCase().includes(query)) return 3;
-      if (name.toLowerCase().includes(query)) return 2;
-      if (description.toLowerCase().includes(query)) return 1;
+    const getMatchPriority = (course) => {
+      const { code, name } = course;
+      if (code.toLowerCase().startsWith(query)) return 2;
+      if (name.toLowerCase().startsWith(query)) return 1;
       return 0;
     };
-  
-    const scoreA = getMatchScore(a);
-    const scoreB = getMatchScore(b);
-  
-    // Higher score means a better match, so sort descending
-    if (scoreA !== scoreB) return scoreB - scoreA;
-  
-    // If both courses have the same score, sort by code
-    return a.data().code.localeCompare(b.data().code);
-  });
-  
+
+    const priorityA = getMatchPriority(aData);
+    const priorityB = getMatchPriority(bData);
+
+    if (priorityA !== priorityB) {
+      return priorityB - priorityA;
+    }
+
+    // Then sort based on the selected method
+    if (sortMethod === 'reviews') {
+      const reviewDiff = bData.reviewCount - aData.reviewCount;
+      if (reviewDiff !== 0) return reviewDiff;
+    } else if (sortMethod === 'rating') {
+      const ratingDiff = bData.rating - aData.rating;
+      if (ratingDiff !== 0) return ratingDiff;
+    }
+
+    return aData.code.localeCompare(bData.code);
+  }); */ 
+
+  // Helper function to calculate match level
+const getMatchLevel = (courseData, query) => {
+  const normQuery = query.replace(/\s+/g, '').toLowerCase();
+  const normCode = courseData.code.replace(/\s+/g, '').toLowerCase();
+  const normName = courseData.name.replace(/\s+/g, '').toLowerCase();
+  const normDesc = courseData.description.replace(/\s+/g, '').toLowerCase();
+
+  // If query starts with a digit, compare against the numeric part of the course code
+  if (/^\d/.test(normQuery)) {
+    const parts = courseData.code.split(' ');
+    if (parts.length > 1) {
+      const numericPart = parts.slice(1).join('').toLowerCase();
+      if (numericPart.startsWith(normQuery)) {
+        return 3; // Best match: numeric part of code
+      }
+    }
+  } else {
+    // For letter queries, check if the full code (without spaces) starts with the query
+    if (normCode.startsWith(normQuery)) {
+      return 3; // Best match: code match
+    }
+  }
+  // Next priority: course name
+  if (normName.startsWith(normQuery)) {
+    return 2;
+  }
+  // Next: course description
+  if (normDesc.startsWith(normQuery)) {
+    return 1;
+  }
+  // No match found
+  return 0;
+};
+
+const sortedCourses = filteredCourses?.sort((a, b) => {
+  const aData = a.data();
+  const bData = b.data();
+
+  if (searchQuery) {
+    const aLevel = getMatchLevel(aData, searchQuery);
+    const bLevel = getMatchLevel(bData, searchQuery);
+    // Higher match level comes first.
+    if (aLevel !== bLevel) {
+      return bLevel - aLevel;
+    }
+    // If both courses have the same match level, then sort by the selected sort method.
+    if (sortMethod === 'reviews') {
+      const reviewDiff = bData.reviewCount - aData.reviewCount;
+      if (reviewDiff !== 0) return reviewDiff;
+    } else if (sortMethod === 'rating') {
+      const ratingDiff = bData.averageRating - aData.averageRating;
+      if (ratingDiff !== 0) return ratingDiff;
+    }
+    // Fallback: alphabetical order by course code.
+    return aData.code.localeCompare(bData.code);
+  } else {
+    // When there's no search query, sort by the selected method first and then alphabetically.
+    if (sortMethod === 'reviews') {
+      const reviewDiff = bData.reviewCount - aData.reviewCount;
+      if (reviewDiff !== 0) return reviewDiff;
+    } else if (sortMethod === 'rating') {
+      const ratingDiff = bData.averageRating - aData.averageRating;
+      if (ratingDiff !== 0) return ratingDiff;
+    }
+    return aData.code.localeCompare(bData.code);
+  }
+});
+
   
 
   const coursesToShow = sortedCourses?.slice(0, visibleCount);
@@ -127,6 +211,7 @@ export default function CoursesPage() {
   const clearFilters = () => {
     setSelectedYear(null);
     setSelectedFaculty('All Faculties');
+    setSortMethod('reviews');
     setNewSearchQuery('');
     router.push('/courses');
   };
@@ -171,7 +256,7 @@ export default function CoursesPage() {
               onKeyDown={handleKeyDown}
             />
           </div>
-          {/* Desktop Inline Filter Controls (unchanged) */}
+          {/* Desktop Inline Filter Controls */}
           <div className="hidden md:flex items-center ml-8 space-x-2">
             <DropdownMenu>
               <DropdownMenuTrigger className="bg-gray-500 text-white px-4 py-2 rounded outline-black text-sm flex items-center">
@@ -214,6 +299,24 @@ export default function CoursesPage() {
               </DropdownMenuContent>
             </DropdownMenu>
 
+            {/* New Sorting Dropdown Menu */}
+            <DropdownMenu>
+              <DropdownMenuTrigger className="bg-gray-500 text-white px-4 py-2 rounded outline-black text-sm flex items-center">
+                {sortMethod === 'reviews'
+                  ? 'Sort by Number of Reviews'
+                  : 'Sort by Average Rating'}
+                <ChevronDownIcon className="ml-2 h-4 w-4" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="bg-gray-600 text-white">
+                <DropdownMenuItem onClick={() => setSortMethod('reviews')}>
+                  Number of Reviews
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setSortMethod('rating')}>
+                  Average Rating
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             <Button variant="destructive" onClick={clearFilters}>
               Clear Filters
             </Button>
@@ -224,6 +327,8 @@ export default function CoursesPage() {
             selectedFaculty={selectedFaculty}
             setSelectedFaculty={setSelectedFaculty}
             faculties={faculties}
+            sortMethod={sortMethod}
+            setSortMethod={setSortMethod}
           />
         </div>
 
@@ -238,16 +343,6 @@ export default function CoursesPage() {
               />
             );
           })}
-          {/*courses.map((doc) => {
-            const courseData = doc.data();
-            console.log(courseData);
-            return (
-              <CourseCard
-                key={doc.id}
-                course={courseData}
-              />
-            );
-          })*/}
         </div>
 
         <div className="fixed bottom-8 right-8 z-50">

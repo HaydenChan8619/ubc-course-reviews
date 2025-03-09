@@ -11,7 +11,7 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'UBC Course Reviews',
   description: 'Course Reviews by Students, for Students.',
-  icons: '/logo.png',
+  icons: '/favicon.ico',
 };
 
 export default function RootLayout({

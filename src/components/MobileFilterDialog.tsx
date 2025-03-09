@@ -21,13 +21,16 @@ export function MobileFilterDialog({
   selectedFaculty,
   setSelectedFaculty,
   faculties,
+  sortMethod,
+  setSortMethod,
 }: {
   selectedYear: number | null;
   setSelectedYear: (year: number | null) => void;
   selectedFaculty: string;
   setSelectedFaculty: (faculty: string) => void;
   faculties: string[];
-  clearFilters: () => void;
+  sortMethod: 'reviews' | 'rating';
+  setSortMethod: (sort: 'reviews' | 'rating') => void;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   return (
@@ -45,7 +48,8 @@ export function MobileFilterDialog({
             <DialogTitle>Filters</DialogTitle>
           </DialogHeader>
           
-          <div className="flex flex-col gap-4 py-4 item-center justify-center">
+          <div className="flex flex-col gap-4 py-4 items-center justify-center">
+            {/* Year Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger className="w-full bg-gray-500 text-white px-4 py-2 rounded outline-black text-sm flex items-center justify-between">
                 {selectedYear ? `Year ${selectedYear}` : "All Years"}
@@ -66,6 +70,7 @@ export function MobileFilterDialog({
               </DropdownMenuContent>
             </DropdownMenu>
 
+            {/* Faculty Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger className="w-full bg-gray-500 text-white px-4 py-2 rounded outline-black text-sm flex items-center justify-between">
                 {selectedFaculty}
@@ -85,14 +90,33 @@ export function MobileFilterDialog({
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
+
+            {/* Sorting Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger className="w-full bg-gray-500 text-white px-4 py-2 rounded outline-black text-sm flex items-center justify-between">
+                {sortMethod === 'reviews'
+                  ? 'Sort by Number of Reviews'
+                  : 'Sort by Average Rating'}
+                <ChevronDownIcon className="ml-2 h-4 w-4" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="bg-gray-700 text-white w-[calc(90vw-2rem)] sm:w-[425px]">
+                <DropdownMenuItem onClick={() => setSortMethod('reviews')}>
+                  Number of Reviews
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setSortMethod('rating')}>
+                  Average Rating
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             <div className="flex flex-col items-center gap-2">
-            <Button
-              variant="default"
-              onClick={() => setIsOpen(false)}
-              className='w-auto px-12'
-            >
-              Apply Filters
-            </Button>
+              <Button
+                variant="default"
+                onClick={() => setIsOpen(false)}
+                className="w-auto px-12"
+              >
+                Apply Filters
+              </Button>
             </div>
           </div>
         </DialogContent>

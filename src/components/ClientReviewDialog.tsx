@@ -19,7 +19,7 @@ export function ClientReviewDialog({ courseCode }: ClientReviewDialogProps) {
       <DialogTrigger asChild>
         <Button size="lg">Write a Review</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px]" onInteractOutside={(event) => event.preventDefault()}>
         <DialogHeader>
           <DialogTitle>Write a Review</DialogTitle>
         </DialogHeader>

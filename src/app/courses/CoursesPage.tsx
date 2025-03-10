@@ -279,6 +279,9 @@ const sortedCourses = filteredCourses?.sort((a, b) => {
                 <DropdownMenuItem onClick={() => setSelectedYear(4)}>
                   Year 4
                 </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setSelectedYear(5)}>
+                  Year 5
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
 

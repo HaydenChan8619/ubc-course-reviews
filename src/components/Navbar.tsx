@@ -1,15 +1,27 @@
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <nav className="sticky top-0 z-50 sauder-blue-bk text-white shadow">
-      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <Link href="/" prefetch={false}>
-          <span className="text-xl md:text-2xl font-bold cursor-pointer">UBC Course Reviews</span>
-        </Link>
+      <div className="container mx-auto px-4 py-1 flex justify-between items-center">
+        <div className='relative flex items-center '>
+          <Link href="/" prefetch={false} className='mr-4'>
+          <Image
+            src="/logo.png"
+            alt="UBC Course Reviews Logo"
+            width={60}
+            height={60}
+            style={{ objectFit: 'contain' }}
+          />
+          </Link>        
+          <Link href="/" prefetch={false} className='mt-1'>
+            <span className="text-xl md:text-2xl font-bold cursor-pointer">UBC Course Reviews</span>
+          </Link>
+        </div>
         {/* Desktop Navigation */}
         <div className="hidden md:flex space-x-4">
           <Link href="/about" prefetch={false}>

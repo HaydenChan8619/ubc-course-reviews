@@ -9,7 +9,7 @@ const AboutPage = () => {
   return (
     <div>
         <Navbar/>
-        <div className="text-left md:mx-64">
+        <div className="text-left md:mx-64 mb-8">
             <section className="mb-8 mt-8">
               <h1 className="text-2xl md:text-4xl font-bold">About UBC Course Reviews</h1>
               <p className="text-sm md:text-lg mt-4"> <i>

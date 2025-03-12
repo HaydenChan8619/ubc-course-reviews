@@ -20,7 +20,7 @@ export default function Footer() {
                 href="https://github.com/HaydenChan8619/" 
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-blue-400 transition-colors duration-300"
+                className="hover:text-gray-500 transition-colors duration-300"
                 prefetch={false}
               >
                 <FaGithub size={24} />
@@ -30,7 +30,7 @@ export default function Footer() {
                 href="https://www.linkedin.com/in/haydenphchan/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-blue-400 transition-colors duration-300"
+                className="hover:text-blue-500 transition-colors duration-300"
                 prefetch={false}
               >
                 <FaLinkedin size={24} />
@@ -40,7 +40,7 @@ export default function Footer() {
                 href="https://www.youtube.com/@HaydenChanUBC"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-blue-400 transition-colors duration-300"
+                className="hover:text-red-500 transition-colors duration-300"
                 prefetch={false}
               >
                 <FaYoutube size={24} />

@@ -9,64 +9,53 @@ const AboutPage = () => {
   return (
     <div>
         <Navbar/>
-      <section className="text-center mb-8 mt-8">
-        <h1 className="text-2xl md:text-4xl font-bold">About UBC Course Reviews</h1>
-        <p className="text-sm md:text-lg mt-4 px-8"> <i>
-            Made by Hayden Chan
-            <br></br>a random guy that had too much time on his hands
-            </i>
-        </p>
-      </section>
+        <div className="text-left md:mx-64">
+          <div className="md:mx-32 mx-8">
+            <section className="mb-8 mt-8">
+              <h1 className="text-2xl md:text-4xl font-bold">About UBC Course Reviews</h1>
+              <p className="text-sm md:text-lg mt-4"> <i>
+                  Made by Hayden Chan, a random guy that had too much time on his hands
+                  </i>
+              </p>
+            </section>
 
-      <section className="mb-4 flex w-[80%] md:w-[60%] justify-center mx-auto">
-        <Card className="text-center">
-            <CardHeader>
-            <h2 className="text-xl md:text-2xl font-semibold">Mission</h2>
-            </CardHeader>
-            <CardContent>
-            <p className="text-sm md:text-md">
-                To give students a place to rant about their courses, <br/>
-                and upcoming students a chance to learn more about courses they might take!
-            </p>
-            </CardContent>
-        </Card>
-        </section>
-
-
-      <section className="mb-4 flex  w-[80%] md:w-[60%] justify-center mx-auto">
-        <Card className="text-center">
-          <CardHeader>
-            <h2 className="text-xl md:text-2xl font-semibold">Story</h2>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm md:text-md">
-              During the spring reading break of 2025 <br/>
-              Hayden got annoyed that his friend kept planning a PolyU Course Review Website without starting<br/>
-              so he decided to write one and prove to him that it&apos;s super doable!
-            </p>
-          </CardContent>
-        </Card>
-      </section>
-
-      {/* Meet the Team */}
-      <section className="mb-4 flex  w-[80%] md:w-[60%] justify-center mx-auto">
-        <Card className="text-center">
-          <CardHeader>
-            <h2 className="text-xl md:text-2xl font-semibold">Meet the Team</h2>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm md:text-md">
-                <strong>Bolt.new:</strong> Initial Prototyping
+            <hr className="border-gray-300" />
+              <section className="mb-4 mt-4">
+                <h2 className="text-2xl md:text-3xl font-semibold">Mission</h2>
                 <br/>
-               <strong>ChatGPT and Deepseek:</strong> Technical Support and data cleanup
-               <br/>
-               <strong>...</strong>
-               <br/>
-               Oh, and <strong>Hayden Chan:</strong> Building the actual site and designing the UI/UX
-            </p>
-          </CardContent>
-        </Card>
-      </section>
+                <p className="text-md md:text-lg"> 
+                    To be the go-to platform where UBC students share course insights, empowering future students to make informed academic choices.  
+                </p>
+              </section>
+
+            <hr className="border-gray-300 my-4" />
+            <section className="mb-4 mt-4">
+                  <h2 className="text-2xl md:text-3xl font-semibold">Community Guidelines</h2>
+                  <br/>
+                  <p className="text-md md:text-lg leading-loose">
+                    <ol >
+                      <li>1. Your comments should be respectful</li>
+                      <li>2. Do not attack any any UBC Staff</li>
+                      <li>3. Negative feedback should be construtive</li>
+                      <li>4. Avoid using profanities</li>
+                    </ol>
+                    <br/>
+                    <p><strong>Violating these guidelines may result in your comments being removed.</strong></p>
+                  </p>
+            </section>
+            <hr className="border-gray-300 my-4" />
+            <section className="tmb-4 mt-4">
+                  <h2 className="text-2xl md:text-3xl font-semibold">A few words from the founder</h2>
+                  <br/>
+                  <p className="text-md md:text-lg leading-loose">
+                    Hey! I am Hayden Chan, a Business and Computer Science student here at UBC. <br/>
+                    This is my solo-project aimed at providing a simple platform for UBC students to leave reviews for courses at UBC. <br/>
+                    Outside of this project, I am also active on YouTube, giving advice to prospective students looking to apply to UBC! <br/>
+                    If you have any feedback for this website, please do so via the google form at the bottom of each page! <br/>
+                  </p>
+            </section>
+          </div>
+        </div>
     </div>
   )
 }

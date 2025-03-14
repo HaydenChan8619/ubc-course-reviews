@@ -34,7 +34,7 @@ const AboutPage = () => {
                   <p className="text-md md:text-lg leading-loose">
                     <ol >
                       <li>1. Your comments should be respectful</li>
-                      <li>2. Do not attack any any UBC Staff</li>
+                      <li>2. Do not attack any UBC Staff</li>
                       <li>3. Negative feedback should be construtive</li>
                       <li>4. Avoid using profanities</li>
                     </ol>

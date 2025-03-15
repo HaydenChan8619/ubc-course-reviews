@@ -49,6 +49,7 @@ export default function Footer() {
           </div>
           <div className='pt-4'></div>
           <div className="border-t border-gray-700 pt-4 text-center text-sm w-full">
+            <div className='pb-2'><i>Disclaimer - UBC Course Reviews is not affiliated with the University of British Columbia</i></div>
               <div>Created by Hayden Chan</div>
           </div>
           </div>

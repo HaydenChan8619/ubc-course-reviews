@@ -9,13 +9,13 @@ const AboutPage = () => {
   return (
     <div>
         <Navbar/>
-        <div className="text-left md:mx-64">
-          <div className="md:mx-32 mx-8">
+        <div className="text-left md:mx-64 mb-8">
             <section className="mb-8 mt-8">
               <h1 className="text-2xl md:text-4xl font-bold">About UBC Course Reviews</h1>
-              <p className="text-sm md:text-lg mt-4"> <i>
+              <p className="text-sm md:text-lg mt-4"> 
+                <i>
                   Disclaimer - UBC Course Reviews is not affiliated with the University of British Columbia
-                  </i>
+                 </i>
               </p>
             </section>
 
@@ -35,7 +35,7 @@ const AboutPage = () => {
                   <p className="text-md md:text-lg leading-loose">
                     <ol >
                       <li>1. Your comments should be respectful</li>
-                      <li>2. Do not attack any any UBC Staff</li>
+                      <li>2. Do not attack any UBC Staff</li>
                       <li>3. Negative feedback should be construtive</li>
                       <li>4. Avoid using profanities</li>
                     </ol>
@@ -55,7 +55,6 @@ const AboutPage = () => {
                   </p>
             </section>
           </div>
-        </div>
     </div>
   )
 }

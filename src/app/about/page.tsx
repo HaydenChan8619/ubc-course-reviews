@@ -14,7 +14,7 @@ const AboutPage = () => {
             <section className="mb-8 mt-8">
               <h1 className="text-2xl md:text-4xl font-bold">About UBC Course Reviews</h1>
               <p className="text-sm md:text-lg mt-4"> <i>
-                  Made by Hayden Chan, a random guy that had too much time on his hands
+                  Disclaimer - UBC Course Reviews is not affiliated with the University of British Columbia
                   </i>
               </p>
             </section>

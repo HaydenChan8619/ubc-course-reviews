@@ -15,13 +15,14 @@ import { Input } from "@/components/ui/input";
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 import { MobileFilterDialog } from "@/components/MobileFilterDialog";
 
-export default function CoursesPage() {
+export default function CoursesPage({coursesData}) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get('search');
 
-  const [summaryDoc, loading, error] = useDocument(doc(db, "summary", "summary"));
-  const summaryMap = summaryDoc?.data()?.summary || {};
+  //const [summaryDoc, loading, error] = useDocument(doc(db, "summary", "summary"));
+  //const summaryMap = summaryDoc?.data()?.summary || {};
+  const summaryMap = coursesData;
 
   const courses = useMemo(() => {
     return Object.entries(summaryMap).map(([id, data]) => ({
@@ -363,12 +364,12 @@ const sortedCourses = filteredCourses?.sort((a, b) => {
           </div>
         )}
 
-        {/* Loading Indicator */}
+        {/* Loading Indicator 
         <div className={`fixed inset-0 top-16 backdrop-blur-md flex items-center justify-center transition-opacity ${
           loading ? 'opacity-300' : 'opacity-0 pointer-events-none'
         }`}>
           <div className="animate-spin h-12 w-12 border-4 border-blue-900 rounded-full border-t-transparent"></div>
-        </div>
+        </div>*/}
       </main>
     </div>
   );

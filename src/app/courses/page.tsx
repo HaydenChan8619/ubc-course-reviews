@@ -1,9 +1,12 @@
-'use client';
 import React, { Suspense } from 'react';
 import CoursesPage from './CoursesPage';
 import Head from 'next/head';
+import { getCoursesData } from '@/lib/coursesData';
 
-export default function Courses() {
+export const revalidate = 3600;
+
+export default async function Courses() {
+  const coursesData = await getCoursesData();
   return (
     <>
       <Head>
@@ -13,7 +16,7 @@ export default function Courses() {
           />
       </Head>
       <Suspense fallback={<div>Loading courses...</div>}>
-        <CoursesPage />
+        <CoursesPage coursesData={coursesData}/>
       </Suspense>
     </>
   );

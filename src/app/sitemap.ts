@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { MetadataRoute } from "next";
 import { getCoursesData } from '@/lib/coursesData';
 

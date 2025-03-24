@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     default: 'UBC Course Reviews',
     template: '%s - UBC Course Reviews'
   },
-  description: 'This is the best place to learn more about courses at UBC, and leave your thoughts about the courses you have taken. Thanks for supporting this student-led project!'
+  description: 'UBC Course Reviews is the best place to learn more about courses at UBC, and leave your thoughts about the courses you have taken. Thanks for supporting this student-led project!'
 };
 
 export default function RootLayout({

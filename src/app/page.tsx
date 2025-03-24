@@ -96,12 +96,6 @@ export default function LandingPage() {
 
   return (
     <>
-    <Head>
-        <meta
-          name="description"
-          content="UBC Course Reviews - the best place to rant about your courses, and learn more about courses you want to take!"
-        />
-    </Head>
     <div className="flex flex-col min-h-screen">
       <Navbar/>
       <motion.section

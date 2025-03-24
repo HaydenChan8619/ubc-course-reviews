@@ -11,7 +11,7 @@ export default function Footer() {
             <p className="mb-4 text-center max-w-xl mx-auto">
               Thank you for supporting this student-led project!
               <br />
-              <a href='https://forms.gle/eKvYucE5vCBnaPRM6' target='blank'><u><strong>Click here</strong></u></a> to give me any feedback!
+              <Link href='https://forms.gle/eKvYucE5vCBnaPRM6' target='blank'><strong><u>Click here to give me any feedback!</u></strong></Link>
             </p>
 
             {/* Social links */}

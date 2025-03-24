@@ -3,7 +3,7 @@ import CoursesPage from './CoursesPage';
 import Head from 'next/head';
 import { getCoursesData } from '@/lib/coursesData';
 
-export const revalidate = 3600;
+export const revalidate = 300;
 
 export default async function Courses() {
   const coursesData = await getCoursesData();

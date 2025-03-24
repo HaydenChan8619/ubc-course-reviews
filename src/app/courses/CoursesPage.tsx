@@ -47,11 +47,8 @@ export default function CoursesPage({coursesData}) {
   const [selectedFaculty, setSelectedFaculty] = useState('All Faculties');
   const [visibleCount, setVisibleCount] = useState(15);
   const [newSearchQuery, setNewSearchQuery] = useState(searchQuery == null ? '' : searchQuery);
-
-  // New state for sorting method: "reviews" (default) or "rating"
   const [sortMethod, setSortMethod] = useState('reviews');
 
-  // Create a ref for the search input
   const searchInputRef = useRef(null);
 
   const filteredCourses = courses.filter(course => {
@@ -67,8 +64,7 @@ export default function CoursesPage({coursesData}) {
       const lowerQuery = searchQuery.toLowerCase();
       searchMatches =
         data.code.toLowerCase().includes(lowerQuery) ||
-        data.name.toLowerCase().includes(lowerQuery) ||
-        data.description.toLowerCase().includes(lowerQuery);
+        data.name.toLowerCase().includes(lowerQuery);
     }
 
     return matchesYear && matchesFaculty && searchMatches;
@@ -153,6 +149,14 @@ const getMatchLevel = (courseData, query) => {
   return 0;
 };
 
+const precomputedMatchLevels = useMemo(() => {
+  if (!searchQuery) return {};
+  return filteredCourses.reduce((acc, course) => {
+    acc[course.id] = getMatchLevel(course.data(), searchQuery);
+    return acc;
+  }, {});
+}, [filteredCourses, searchQuery]);
+
 const sortedCourses = filteredCourses?.sort((a, b) => {
   const aData = a.data();
   const bData = b.data();
@@ -160,18 +164,13 @@ const sortedCourses = filteredCourses?.sort((a, b) => {
   if (searchQuery) {
     const aLevel = getMatchLevel(aData, searchQuery);
     const bLevel = getMatchLevel(bData, searchQuery);
-    // Higher match level comes first.
-    if (aLevel !== bLevel) {
-      return bLevel - aLevel;
+
+    if (searchQuery) {
+      const aLevel = precomputedMatchLevels[a.id];
+      const bLevel = precomputedMatchLevels[b.id];
+      if (aLevel !== bLevel) return bLevel - aLevel;
     }
-    // If both courses have the same match level, then sort by the selected sort method.
-    if (sortMethod === 'reviews') {
-      const reviewDiff = bData.reviewCount - aData.reviewCount;
-      if (reviewDiff !== 0) return reviewDiff;
-    } else if (sortMethod === 'rating') {
-      const ratingDiff = bData.averageRating - aData.averageRating;
-      if (ratingDiff !== 0) return ratingDiff;
-    }
+
     // Fallback: alphabetical order by course code.
     return aData.code.localeCompare(bData.code);
   } else {
@@ -186,8 +185,6 @@ const sortedCourses = filteredCourses?.sort((a, b) => {
     return aData.code.localeCompare(bData.code);
   }
 });
-
-  
 
   const coursesToShow = sortedCourses?.slice(0, visibleCount);
 
@@ -220,7 +217,7 @@ const sortedCourses = filteredCourses?.sort((a, b) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       handleSearch();
-    }, 1);
+    }, 200);
 
     return () => clearTimeout(timer);
   }, [newSearchQuery]);

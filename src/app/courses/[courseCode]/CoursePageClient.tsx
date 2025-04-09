@@ -163,40 +163,45 @@ export default function CoursePageClient({ courseCode }) {
           </div>
 
           <div className="mb-8">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-2xl font-bold">Reviews</h3>
-            <div className="flex items-center space-x-4">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline">
-                  {sortCriteria === 'recent'
-                    ? 'Sort by Most Recent'
-                    : sortCriteria === 'critical'
-                      ? 'Sort by Most Critical'
-                      : sortCriteria === 'comments'
-                      ? 'Sort by Prioritizing Comments'
-                      : 'Sort by Most Upvotes'}
-                  <ChevronDownIcon className="ml-2 h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem onClick={() => setSortCriteria("votes")}>
-                  Sort by Most Upvotes
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setSortCriteria("recent")}>
-                    Sort by Most Recent
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setSortCriteria("critical")}>
-                    Sort by Most Critical
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setSortCriteria("comments")}>
-                    Sort by Prioritizing Comments
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <ClientReviewDialog courseCode={courseCode} />
-            </div>
-            </div>
+            <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
+              <h3 className="text-2xl font-bold mb-4 md:mb-0">Reviews</h3>
+              <div className="flex items-center justify-between space-x-4">
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" className="flex items-center text-left">
+                        <span
+                          className="block w-36 truncate text-left md:w-auto md:max-w-full md:overflow-visible md:whitespace-normal"
+                        >
+                        {sortCriteria === 'votes'
+                            ? 'Sort by Most Upvotes'
+                            : sortCriteria === 'critical'
+                            ? 'Sort by Most Critical'
+                            : sortCriteria === 'comments'
+                            ? 'Sort by Prioritizing Comments'
+                            : 'Sort by Most Recent'}
+                        </span>
+                        <ChevronDownIcon className="ml-2 h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuItem onClick={() => setSortCriteria("votes")}>
+                        Sort by Most Upvotes
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setSortCriteria("recent")}>
+                        Sort by Most Recent
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setSortCriteria("critical")}>
+                        Sort by Most Critical
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setSortCriteria("comments")}>
+                        Sort by Prioritizing Comments
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+
+                  <ClientReviewDialog courseCode={courseCode} />
+                </div>
+              </div>
 
             <div className="space-y-4">
               {sortedReviewEntries.length > 0 ? (

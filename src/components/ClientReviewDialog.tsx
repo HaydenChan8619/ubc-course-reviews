@@ -17,7 +17,7 @@ export function ClientReviewDialog({ courseCode }: ClientReviewDialogProps) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button size="lg">Write a Review</Button>
+        <Button size="default">Write a Review</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]" onInteractOutside={(event) => event.preventDefault()}>
         <DialogHeader>

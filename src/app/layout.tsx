@@ -4,7 +4,8 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import Footer from '@/components/Footer';
 import Head from 'next/head';
-import { GoogleAnalytics } from '@next/third-parties/google'
+import { GoogleAnalytics } from '@next/third-parties/google';
+import { PostHogProvider } from '@/components/PostHogProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -25,13 +26,15 @@ export default function RootLayout({
   return (
     <>
       <html lang="en" suppressHydrationWarning>
-          <body className="min-h-screen flex flex-col">
-              <GoogleAnalytics gaId={googleTagId}></GoogleAnalytics>
-          <main className="min-h-screen flex flex-col">
-            <div className="flex-1">{children}</div>
-            <Footer />
-          </main>
-          </body>
+        <body className="min-h-screen flex flex-col">
+          <GoogleAnalytics gaId={googleTagId}></GoogleAnalytics>
+          <PostHogProvider>
+            <main className="min-h-screen flex flex-col">
+              <div className="flex-1">{children}</div>
+              <Footer />
+            </main>
+          </PostHogProvider>
+        </body>
       </html>
     </>
   );

@@ -6,6 +6,7 @@ import Footer from '@/components/Footer';
 import Head from 'next/head';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { PostHogProvider } from '@/components/PostHogProvider';
+import { Analytics } from '@vercel/analytics/next';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -34,6 +35,7 @@ export default function RootLayout({
               <Footer />
             </main>
           </PostHogProvider>
+          <Analytics />
         </body>
       </html>
     </>

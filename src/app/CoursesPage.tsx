@@ -194,9 +194,9 @@ const sortedCourses = filteredCourses?.sort((a, b) => {
 
   const handleSearch = () => {
     if (newSearchQuery === '') {
-      router.push(`/courses`);
+      router.push(`/`);
     } else {
-      router.push(`/courses?search=${encodeURIComponent(newSearchQuery)}`);
+      router.push(`/?search=${encodeURIComponent(newSearchQuery)}`);
     }
   };
 
@@ -211,7 +211,7 @@ const sortedCourses = filteredCourses?.sort((a, b) => {
     setSelectedFaculty('All Faculties');
     setSortMethod('reviews');
     setNewSearchQuery('');
-    router.push('/courses');
+    router.push('/');
   };
 
   useEffect(() => {

@@ -1,7 +1,7 @@
 // @ts-nocheck
-'use client'
+//'use client'
 
-import { motion } from 'framer-motion';
+/*import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -133,7 +133,6 @@ export default function LandingPage() {
                     prefetch={false}
                   >
                     <div className="flex items-center px-3 py-2 hover:bg-gray-200 cursor-pointer rounded">
-                      {/* Fixed container for the icon */}
                       <div className="w-6 h-6 flex-shrink-0 flex items-center justify-center">
                         <FaMagnifyingGlass className="text-gray-400" />
                       </div>
@@ -154,6 +153,37 @@ export default function LandingPage() {
         </div>
       </motion.section>
     </div>
+    </>
+  );
+}*/
+import React, { Suspense } from 'react';
+import CoursesPage from './CoursesPage';
+import Head from 'next/head';
+import { getCoursesData } from '@/lib/coursesData';
+import { Metadata } from 'next';
+
+export const revalidate = 300;
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: `UBC Course Reviews`,
+    description: 'UBC Course Reviews is the best place to learn more about courses at UBC, and leave your thoughts about the courses you have taken.'
+  };
+}
+
+export default async function Courses() {
+  const coursesData = await getCoursesData();
+  return (
+    <>
+      <Head>
+          <meta
+            name="description"
+            content="UBC Course Reviews - full course list of all UBC Courses! Browse around to learn what others think about UBC Courses!"
+          />
+      </Head>
+      <Suspense fallback={<div>Loading courses...</div>}>
+        <CoursesPage coursesData={coursesData}/>
+      </Suspense>
     </>
   );
 }

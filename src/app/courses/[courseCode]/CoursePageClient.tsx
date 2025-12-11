@@ -131,7 +131,7 @@ export default function CoursePageClient({ courseCode }) {
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
-            <Button onClick={() => (window.location.href = "/courses")}>
+            <Button onClick={() => (window.location.href = "/")}>
               Back to Courses
             </Button>
             <h1 className="text-2xl md:text-4xl font-bold mb-2 mt-8">

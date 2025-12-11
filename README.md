@@ -4,8 +4,8 @@
 
 <a href="https://www.ubccoursereviews.ca/" target="_blank">Click to check out UBC Course Reviews!</a>
 
-### Landing page allows for direct search or exploration
-![Landing page allows for direct search or exploration](public/landing_page.png "Landing page allows for direct search or exploration")
+<!--### Landing page allows for direct search or exploration
+![Landing page allows for direct search or exploration](public/landing_page.png "Landing page allows for direct search or exploration") !-->
 
 ### Exploration page shows all courses with a preview of rating
 ![Exploration page shows all courses with a preview of rating](public/course_list.png "Exploration page shows all courses with a preview of rating")

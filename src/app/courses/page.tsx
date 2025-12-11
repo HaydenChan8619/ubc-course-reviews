@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import CoursesPage from './CoursesPage';
+import CoursesPage from '../CoursesPage';
 import Head from 'next/head';
 import { getCoursesData } from '@/lib/coursesData';
 import { Metadata } from 'next';
